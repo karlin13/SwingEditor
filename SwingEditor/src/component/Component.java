@@ -16,8 +16,11 @@ public abstract class Component {
 	protected int height;
 	protected ComponentType componentType;
 	
+	private Color color;
+	
 	private Rectangle[] resizeHelper;
 	private final int resizeHelperLen = 12;
+	
 	// operations
 	public Component(){
 		resizeHelper = new Rectangle[8];
@@ -34,6 +37,7 @@ public abstract class Component {
 	
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(color);
 		g2.draw(shape);
 	}
 	protected void setResizeHelper(){
@@ -117,6 +121,13 @@ public abstract class Component {
 		else{
 			return Direction.NONE;
 		}
+	}
+	
+	public void setDefaultColor(){
+		color = Color.CYAN;
+	}
+	public void setHighlightColor(){
+		color = Color.BLUE;
 	}
 	
 	// getters

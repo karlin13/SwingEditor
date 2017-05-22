@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Vector;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -24,7 +25,7 @@ public class EditorPanel extends JPanel {
 	//attributes
 	JPopupMenu contextMenu;
 	
-	private LinkedList<Component> components;
+	private Vector<Component> components;
 	private Component tempComponent;
 	private Component selectedComponent;
 
@@ -36,11 +37,13 @@ public class EditorPanel extends JPanel {
 	
 	private boolean drawTemp;
 	
+	private int index;
+	
 	//operations
 	public EditorPanel() {
 		initContextMenu();
 		
-		components = new LinkedList<Component>();
+		components = new Vector<Component>();
 		tempComponent = new RectangleComponent();
 		selectedComponent = null;
 		
@@ -72,7 +75,11 @@ public class EditorPanel extends JPanel {
 	}
 	
 	private void addComponent(Component component){
-		components.add(component);
+		System.out.println("addComponent start===========");
+		for(Component comp:components)
+			System.out.println(comp);
+		System.out.println("addComponent end===========");
+		components.add(index, component);
 	}
 	private void deleteComponent(){
 		components.remove(selectedComponent);
@@ -104,17 +111,25 @@ public class EditorPanel extends JPanel {
 	class EditorMouseAdapter extends MouseAdapter{
 		public void mouseClicked(MouseEvent e){
 			if(e.getButton() == MouseEvent.BUTTON1){
-				Iterator<Component> iterator = components.iterator();
-				Component component;
+				//이전 selectedComponent의 색을 원래대로 돌려노흔다
+				if(selectedComponent != null)
+					selectedComponent.setDefaultColor();
 				
 				//아무 컴포넌트도 선택되지 않았으면 null
 				selectedComponent = null;
 				
-				while(iterator.hasNext()){
-					component = iterator.next();
-					
+				for(Component component:components){
 					if(component.selected(e.getX(), e.getY())){
 						selectedComponent = component;
+						selectedComponent.setHighlightColor();
+						
+						/* resizeHelper를 보여줄 때 tempComponent의 것을 보여주므로 selectedComponent와 tempComponent르 동기화 해야함*/
+						Point startP = selectedComponent.getStartP();
+						int width = selectedComponent.getWidth();
+						int height = selectedComponent.getHeight();
+						
+						tempComponent.setSize(startP, width, height);
+						/******************************************************************************/
 						break;
 					}
 				}
@@ -130,31 +145,37 @@ public class EditorPanel extends JPanel {
 			firstP.y = e.getY();
 			
 			if(selectedComponent != null){
+				index = components.indexOf(selectedComponent);
+		
 				//components에서 selectedComponent제거
 				components.remove(selectedComponent);
-				//selectedComponent 속성값 tempComponent에 복사
+		
 				Point startP = selectedComponent.getStartP();
 				int width = selectedComponent.getWidth();
 				int height = selectedComponent.getHeight();
 				
 				tempComponent.setSize(startP, width, height);
+				tempComponent.setHighlightColor();
 				
 				dx = selectedComponent.getStartP().x-firstP.x;
 				dy = selectedComponent.getStartP().y-firstP.y;
 			}
+			else{
+				tempComponent.setDefaultColor();
+			}
 		}
 		public void mouseReleased(MouseEvent e){	
-			drawTemp = false;
-			
 			lastP.x = e.getX();
 			lastP.y = e.getY();
 			
-			Component newComponent;
-			
 			if(selectedComponent == null){
+				Component newComponent;
+				
 				//새 컴포넌트를 리스트에 추가한다
 				newComponent = new RectangleComponent();
 				newComponent.setSize(firstP , lastP);
+				
+				addComponent(newComponent);
 			}
 			else{
 				Point startP = tempComponent.getStartP();
@@ -162,13 +183,13 @@ public class EditorPanel extends JPanel {
 				int height = tempComponent.getHeight();
 				
 				selectedComponent.setSize(startP, width, height);
-				newComponent = selectedComponent;
+				addComponent(selectedComponent);
 			}
-
-			addComponent(newComponent);
 			
 			//에디터 패널 갱신
 			repaint();
+			
+			drawTemp = false;
 		}
 	}
 	class EditorMouseMotionAdapter extends MouseMotionAdapter{
