@@ -7,10 +7,9 @@ public class Main{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					//Window frame = new Window();
+					Window frame = new Window();
 					
-					//frame.getContentPane().add(toolBar, BorderLayout.NORTH);
-					//frame.setVisible(true);
+					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

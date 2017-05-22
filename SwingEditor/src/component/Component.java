@@ -18,24 +18,34 @@ public abstract class Component {
 	protected int height;
 	protected String componentType;
 	
-	private Rectangle[] resizeHelper = new Rectangle[8];
+	private Rectangle[] resizeHelper;
 	private final int resizeHelperLen = 6;
 	// operations
+	public Component(){
+		resizeHelper = new Rectangle[8];
+				
+		for(int i=0;i<8;i++)
+			resizeHelper[i] = new Rectangle();
+	
+	}
+	
 	public abstract void setSize(Point start, int width, int height);
+	public abstract void setSize(Point first, Point last);
 	public abstract boolean selected(Point p);
+	public abstract boolean selected(int x, int y);
 	
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.draw(shape);
 	}
-	public void setResizeHelper(){
+	protected void setResizeHelper(){
 		int startX = start.x;
 		int midX = start.x+(width/2);
 		int endX = start.x+width;
 		int startY = start.y;
 		int midY = start.y+(height/2);
 		int endY = start.y+height;
-		
+			
 		resizeHelper[0].setBounds(startX-resizeHelperLen/2, startY-resizeHelperLen/2, resizeHelperLen, resizeHelperLen);
 		resizeHelper[1].setBounds(midX-resizeHelperLen/2, startY-resizeHelperLen/2, resizeHelperLen, resizeHelperLen);
 		resizeHelper[2].setBounds(endX-resizeHelperLen/2, startY-resizeHelperLen/2, resizeHelperLen, resizeHelperLen);
