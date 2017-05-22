@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import javax.swing.JPanel;
 
 import component.Component;
+import component.Direction;
 import component.RectangleComponent;
 
 public class EditorPanel extends JPanel {
@@ -144,14 +145,72 @@ public class EditorPanel extends JPanel {
 				 tempComponent.setSize(firstP, tempP);
 			 }
 			 else{
-				 tempP.x = e.getX()+dx;
-				 tempP.y = e.getY()+dy;
-				 int width = tempComponent.getWidth();
-				 int height = tempComponent.getHeight();
+				 Direction dir = tempComponent.getResizeHelperDirection(e.getX(), e.getY());
+				 
+				 int width=tempComponent.getWidth();
+				 int height=tempComponent.getHeight();
+				 
+				 switch(dir){
+					 case NONE:
+						 tempP.x = e.getX()+dx;
+						 tempP.y = e.getY()+dy;
+						 width = tempComponent.getWidth();
+						 height = tempComponent.getHeight();
+						 break;
+					 case UL:
+						 tempP.x = e.getX();
+						 tempP.y = e.getY();
+						 width = selectedComponent.getWidth()+selectedComponent.getStartP().x-e.getX();
+						 height = selectedComponent.getHeight()+selectedComponent.getStartP().y-e.getY();
+						 break;
+					 case U:
+						 tempP.x = tempComponent.getStartP().x;
+						 tempP.y = e.getY();
+						 width = selectedComponent.getWidth();
+						 height = selectedComponent.getHeight()+selectedComponent.getStartP().y-e.getY();
+						 break;
+					 case UR:
+						 tempP.x = tempComponent.getStartP().x;
+						 tempP.y = e.getY();
+						 width = e.getX()-selectedComponent.getStartP().x;
+						 height = selectedComponent.getHeight()+selectedComponent.getStartP().y-e.getY();
+						 break;
+					 case R:
+						 tempP.x = tempComponent.getStartP().x;
+						 tempP.y = tempComponent.getStartP().y;
+						 width = e.getX()-selectedComponent.getStartP().x;
+						 height = selectedComponent.getHeight();
+						 break;
+					 case DR:
+						 tempP.x = tempComponent.getStartP().x;
+						 tempP.y = tempComponent.getStartP().y;
+						 width = e.getX()-selectedComponent.getStartP().x;
+						 height = e.getY()-selectedComponent.getStartP().y;
+						 break;
+					 case D:
+						 tempP.x = tempComponent.getStartP().x;
+						 tempP.y = tempComponent.getStartP().y;
+						 width = selectedComponent.getWidth();
+						 height = e.getY()-selectedComponent.getStartP().y;
+						 break;
+					 case DL:
+						 tempP.x = e.getX();
+						 tempP.y = tempComponent.getStartP().y;
+						 width = selectedComponent.getWidth()+selectedComponent.getStartP().x-e.getX();
+						 height = e.getY()-selectedComponent.getStartP().y;
+						 break;
+					 case L:
+						 tempP.x = e.getX();
+						 tempP.y = tempComponent.getStartP().y;
+						 width = selectedComponent.getWidth()+selectedComponent.getStartP().x-e.getX();
+						 height = selectedComponent.getHeight();
+						 break;
+					default:
+						break;
+				 }
 				 
 				 tempComponent.setSize(tempP, width, height);
 			 }
-			 
 			 repaint();
 		 }
 	}

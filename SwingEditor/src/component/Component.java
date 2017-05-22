@@ -19,7 +19,7 @@ public abstract class Component {
 	protected String componentType;
 	
 	private Rectangle[] resizeHelper;
-	private final int resizeHelperLen = 6;
+	private final int resizeHelperLen = 12;
 	// operations
 	public Component(){
 		resizeHelper = new Rectangle[8];
@@ -62,7 +62,7 @@ public abstract class Component {
 		for(int i=0;i<resizeHelper.length;i++)
 			g2.fill(resizeHelper[i]);
 	}
-	public Direction selectedResizeHelper(Point p){
+	public Direction getResizeHelperDirection(Point p){
 		if(resizeHelper[0].contains(p)){
 			return Direction.UL;
 		}
@@ -85,6 +85,35 @@ public abstract class Component {
 			return Direction.DL;
 		}
 		else if(resizeHelper[7].contains(p)){
+			return Direction.L;
+		}
+		else{
+			return Direction.NONE;
+		}
+	}
+	public Direction getResizeHelperDirection(int x, int y){
+		if(resizeHelper[0].contains(x, y)){
+			return Direction.UL;
+		}
+		else if(resizeHelper[1].contains(x, y)){
+			return Direction.U;
+		}
+		else if(resizeHelper[2].contains(x, y)){
+			return Direction.UR;
+		}
+		else if(resizeHelper[3].contains(x, y)){
+			return Direction.R;
+		}
+		else if(resizeHelper[4].contains(x, y)){
+			return Direction.DR;
+		}
+		else if(resizeHelper[5].contains(x, y)){
+			return Direction.D;
+		}
+		else if(resizeHelper[6].contains(x, y)){
+			return Direction.DL;
+		}
+		else if(resizeHelper[7].contains(x, y)){
 			return Direction.L;
 		}
 		else{

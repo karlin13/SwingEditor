@@ -8,7 +8,8 @@ import java.awt.Rectangle;
 public class RectangleComponent extends Component{
 	public RectangleComponent(){
 		startP = new Point();
-	
+		componentType = "rectangle";
+		
 		shape = new Rectangle(startP.x, startP.y, width, height);
 	}
 
