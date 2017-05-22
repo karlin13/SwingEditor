@@ -6,10 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.util.Vector;
 
 public abstract class Component {
-	
 	//attributes
 	protected Shape shape;
 	

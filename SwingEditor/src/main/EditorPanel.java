@@ -143,8 +143,7 @@ public class EditorPanel extends JPanel {
 				dy = selectedComponent.getStartP().y-firstP.y;
 			}
 		}
-		public void mouseReleased(MouseEvent e){
-			
+		public void mouseReleased(MouseEvent e){	
 			drawTemp = false;
 			
 			lastP.x = e.getX();
@@ -246,7 +245,6 @@ public class EditorPanel extends JPanel {
 					default:
 						break;
 				 }
-				 
 				 tempComponent.setSize(tempP, width, height);
 			 }
 			 repaint();
