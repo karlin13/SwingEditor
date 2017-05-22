@@ -75,10 +75,6 @@ public class EditorPanel extends JPanel {
 	}
 	
 	private void addComponent(Component component){
-		System.out.println("addComponent start===========");
-		for(Component comp:components)
-			System.out.println(comp);
-		System.out.println("addComponent end===========");
 		components.add(index, component);
 	}
 	private void deleteComponent(){
