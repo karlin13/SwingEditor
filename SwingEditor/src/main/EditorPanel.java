@@ -23,13 +23,15 @@ public class EditorPanel extends JPanel {
 	private Point firstP;
 	private Point lastP;
 	private Point tempP;
-
-	private boolean isTempDraw;
+	
+	private int dx, dy;//컴포넌트 이동할 때 쓰는 변수
+	
+	private boolean drawTemp;
 	
 	//operations
 	public EditorPanel() {
 		components = new LinkedList<Component>();
-		tempComponent = null;
+		tempComponent = new RectangleComponent();
 		selectedComponent = null;
 		
 		firstP = new Point();
@@ -56,12 +58,12 @@ public class EditorPanel extends JPanel {
 			component.draw(g);
 		}
 		//임시 컴포넌트 그림
-		if(isTempDraw){
+		if(drawTemp){
 			tempComponent.draw(g);
 		}
 		//선택된 컴포넌트 resizeHelper 표시
 		if(selectedComponent != null){
-			selectedComponent.drawResizeHelper(g);
+			tempComponent.drawResizeHelper(g);
 		}
 	}
 	
@@ -88,22 +90,43 @@ public class EditorPanel extends JPanel {
 			firstP.x = e.getX();
 			firstP.y = e.getY();
 			
-			//컴포넌트를 선택하고 있을 땐 리사이징 또는 이동만 가능하므로 새 객체를 생성안한다
-			if(selectedComponent == null){
-				tempComponent = new RectangleComponent();
+			if(selectedComponent != null){
+				//components에서 selectedComponent제거
+				components.remove(selectedComponent);
+				//selectedComponent 속성값 tempComponent에 복사
+				Point startP = selectedComponent.getStartP();
+				int width = selectedComponent.getWidth();
+				int height = selectedComponent.getHeight();
+				
+				tempComponent.setSize(startP, width, height);
+				
+				dx = selectedComponent.getStartP().x-firstP.x;
+				dy = selectedComponent.getStartP().y-firstP.y;
 			}
 		}
 		public void mouseReleased(MouseEvent e){
 			
-			isTempDraw = false;
+			drawTemp = false;
 			
 			lastP.x = e.getX();
 			lastP.y = e.getY();
 			
-			//새 컴포넌트를 리스트에 추가한다
-			Component newComponent = new RectangleComponent();
-			newComponent.setSize(firstP , lastP);
+			Component newComponent;
 			
+			if(selectedComponent == null){
+				//새 컴포넌트를 리스트에 추가한다
+				newComponent = new RectangleComponent();
+				newComponent.setSize(firstP , lastP);
+			}
+			else{
+				Point startP = tempComponent.getStartP();
+				int width = tempComponent.getWidth();
+				int height = tempComponent.getHeight();
+				
+				selectedComponent.setSize(startP, width, height);
+				newComponent = selectedComponent;
+			}
+
 			addComponent(newComponent);
 			
 			//에디터 패널 갱신
@@ -112,12 +135,22 @@ public class EditorPanel extends JPanel {
 	}
 	class EditorMouseMotionAdapter extends MouseMotionAdapter{
 		 public void mouseDragged(MouseEvent e){
-			 isTempDraw = true;
+			 drawTemp = true;
 			 
-			 tempP.x = e.getX();
-			 tempP.y = e.getY();
-			 
-			 tempComponent.setSize(firstP, tempP);
+			 if(selectedComponent == null){
+				 tempP.x = e.getX();
+				 tempP.y = e.getY();
+				 
+				 tempComponent.setSize(firstP, tempP);
+			 }
+			 else{
+				 tempP.x = e.getX()+dx;
+				 tempP.y = e.getY()+dy;
+				 int width = tempComponent.getWidth();
+				 int height = tempComponent.getHeight();
+				 
+				 tempComponent.setSize(tempP, width, height);
+			 }
 			 
 			 repaint();
 		 }

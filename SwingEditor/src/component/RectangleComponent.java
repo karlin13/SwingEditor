@@ -7,26 +7,33 @@ import java.awt.Rectangle;
 
 public class RectangleComponent extends Component{
 	public RectangleComponent(){
-		start = new Point();
+		startP = new Point();
 	
-		shape = new Rectangle(start.x, start.y, width, height);
+		shape = new Rectangle(startP.x, startP.y, width, height);
 	}
 
 	@Override
 	public void setSize(Point start, int width, int height) {
+		startP.x = start.x;
+		startP.y = start.y;
+		this.width = width;
+		this.height = height;
+		
 		Rectangle rectangle = (Rectangle) shape;
 		rectangle.setBounds(start.x, start.y, width, height);
+		
+		setResizeHelper();
 	}
 	@Override
 	public void setSize(Point first, Point last) {
 		// 작은 x,y을 찾아 start* 변수에 저장
-		start.x = (first.x>=last.x)?last.x:first.x;
-		start.y = (first.y>=last.y)?last.y:first.y;
+		startP.x = (first.x>=last.x)?last.x:first.x;
+		startP.y = (first.y>=last.y)?last.y:first.y;
 		width = Math.abs(first.x-last.x);
 		height = Math.abs(first.y-last.y);
 		
 		Rectangle rectangle = (Rectangle) shape;
-		rectangle.setBounds(start.x, start.y, width, height);		
+		rectangle.setBounds(startP.x, startP.y, width, height);		
 		
 		setResizeHelper();
 	}

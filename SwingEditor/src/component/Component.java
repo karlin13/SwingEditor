@@ -13,7 +13,7 @@ public abstract class Component {
 	//attributes
 	protected Shape shape;
 	
-	protected Point start;
+	protected Point startP;
 	protected int width;
 	protected int height;
 	protected String componentType;
@@ -39,12 +39,12 @@ public abstract class Component {
 		g2.draw(shape);
 	}
 	protected void setResizeHelper(){
-		int startX = start.x;
-		int midX = start.x+(width/2);
-		int endX = start.x+width;
-		int startY = start.y;
-		int midY = start.y+(height/2);
-		int endY = start.y+height;
+		int startX = startP.x;
+		int midX = startP.x+(width/2);
+		int endX = startP.x+width;
+		int startY = startP.y;
+		int midY = startP.y+(height/2);
+		int endY = startP.y+height;
 			
 		resizeHelper[0].setBounds(startX-resizeHelperLen/2, startY-resizeHelperLen/2, resizeHelperLen, resizeHelperLen);
 		resizeHelper[1].setBounds(midX-resizeHelperLen/2, startY-resizeHelperLen/2, resizeHelperLen, resizeHelperLen);
@@ -93,7 +93,7 @@ public abstract class Component {
 	}
 	
 	// getters
-	public Point getStart(){return start;}
+	public Point getStartP(){return startP;}
 	public int getWidth(){return width;}
 	public int getHeight(){return height;}
 	public String getComponentType(){return componentType;}
