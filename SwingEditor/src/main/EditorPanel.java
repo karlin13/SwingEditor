@@ -9,14 +9,21 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 import component.Component;
 import component.Direction;
 import component.RectangleComponent;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class EditorPanel extends JPanel {
 	//attributes
+	JPopupMenu contextMenu;
+	
 	private LinkedList<Component> components;
 	private Component tempComponent;
 	private Component selectedComponent;
@@ -31,6 +38,8 @@ public class EditorPanel extends JPanel {
 	
 	//operations
 	public EditorPanel() {
+		initContextMenu();
+		
 		components = new LinkedList<Component>();
 		tempComponent = new RectangleComponent();
 		selectedComponent = null;
@@ -42,8 +51,32 @@ public class EditorPanel extends JPanel {
 		addMouseListener(new EditorMouseAdapter());
 		addMouseMotionListener(new EditorMouseMotionAdapter());
 	}
-	public void addComponent(Component component){
+	private void initContextMenu(){
+		contextMenu = new JPopupMenu();
+		JMenuItem deleteComponentMenu = new JMenuItem("delete");
+		
+		deleteComponentMenu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				deleteComponentItemAction();
+			}
+        });
+		
+		contextMenu.add(deleteComponentMenu);
+	}
+	private void deleteComponentItemAction(){
+		if(selectedComponent != null){
+			deleteComponent();
+		}
+		repaint();
+	}
+	
+	private void addComponent(Component component){
 		components.add(component);
+	}
+	private void deleteComponent(){
+		components.remove(selectedComponent);
+		selectedComponent = null;
 	}
 	
 	@Override
@@ -70,22 +103,27 @@ public class EditorPanel extends JPanel {
 	
 	class EditorMouseAdapter extends MouseAdapter{
 		public void mouseClicked(MouseEvent e){
-			Iterator<Component> iterator = components.iterator();
-			Component component;
-			
-			//아무 컴포넌트도 선택되지 않았으면 null
-			selectedComponent = null;
-			
-			while(iterator.hasNext()){
-				component = iterator.next();
+			if(e.getButton() == MouseEvent.BUTTON1){
+				Iterator<Component> iterator = components.iterator();
+				Component component;
 				
-				if(component.selected(e.getX(), e.getY())){
-					selectedComponent = component;
-					break;
+				//아무 컴포넌트도 선택되지 않았으면 null
+				selectedComponent = null;
+				
+				while(iterator.hasNext()){
+					component = iterator.next();
+					
+					if(component.selected(e.getX(), e.getY())){
+						selectedComponent = component;
+						break;
+					}
 				}
+
+				repaint();
 			}
-			
-			repaint();
+			else if(e.getButton() == MouseEvent.BUTTON3 && selectedComponent != null){
+				contextMenu.show(e.getComponent(), e.getX(), e.getY());
+			}
 		}
 		public void mousePressed(MouseEvent e){
 			firstP.x = e.getX();
