@@ -14,7 +14,7 @@ public abstract class Component {
 	protected Point startP;
 	protected int width;
 	protected int height;
-	protected String componentType;
+	protected ComponentType componentType;
 	
 	private Rectangle[] resizeHelper;
 	private final int resizeHelperLen = 12;
@@ -123,5 +123,5 @@ public abstract class Component {
 	public Point getStartP(){return startP;}
 	public int getWidth(){return width;}
 	public int getHeight(){return height;}
-	public String getComponentType(){return componentType;}
+	public ComponentType getComponentType(){return componentType;}
 }
