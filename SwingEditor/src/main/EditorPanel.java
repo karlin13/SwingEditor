@@ -6,9 +6,8 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -25,27 +24,27 @@ public class EditorPanel extends JPanel {
 	//attributes
 	JPopupMenu contextMenu;
 	
-	private Vector<Component> components;
-	private Component tempComponent;
+	private List<Component> components;
+	private Component newComponent;
 	private Component selectedComponent;
-
+	private Component unchangedComponent;
+	
 	private Point firstP;
 	private Point lastP;
 	private Point tempP;
 	
 	private int dx, dy;//컴포넌트 이동할 때 쓰는 변수
 	
-	private boolean drawTemp;
-	
-	private int index;
+	private boolean drawNewComponent;
 	
 	//operations
 	public EditorPanel() {
 		initContextMenu();
 		
-		components = new Vector<Component>();
-		tempComponent = new RectangleComponent();
+		components = new LinkedList<Component>();
+		newComponent = new RectangleComponent();
 		selectedComponent = null;
+		unchangedComponent = new RectangleComponent();
 		
 		firstP = new Point();
 		lastP = new Point();
@@ -75,7 +74,7 @@ public class EditorPanel extends JPanel {
 	}
 	
 	private void addComponent(Component component){
-		components.add(index, component);
+		components.add(component);
 	}
 	private void deleteComponent(){
 		components.remove(selectedComponent);
@@ -95,12 +94,12 @@ public class EditorPanel extends JPanel {
 			component.draw(g);
 		}
 		//임시 컴포넌트 그림
-		if(drawTemp){
-			tempComponent.draw(g);
+		if(drawNewComponent){
+			newComponent.draw(g);
 		}
 		//선택된 컴포넌트 resizeHelper 표시
 		if(selectedComponent != null){
-			tempComponent.drawResizeHelper(g);
+			selectedComponent.drawResizeHelper(g);
 		}
 	}
 	
@@ -119,13 +118,11 @@ public class EditorPanel extends JPanel {
 						selectedComponent = component;
 						selectedComponent.setHighlightColor();
 						
-						/* resizeHelper를 보여줄 때 tempComponent의 것을 보여주므로 selectedComponent와 tempComponent르 동기화 해야함*/
 						Point startP = selectedComponent.getStartP();
 						int width = selectedComponent.getWidth();
 						int height = selectedComponent.getHeight();
 						
-						tempComponent.setSize(startP, width, height);
-						/******************************************************************************/
+						unchangedComponent.setSize(startP, width, height);
 						break;
 					}
 				}
@@ -137,34 +134,29 @@ public class EditorPanel extends JPanel {
 			}
 		}
 		public void mousePressed(MouseEvent e){
+			System.out.println("enter mouse press");
 			firstP.x = e.getX();
 			firstP.y = e.getY();
 			
 			if(selectedComponent != null){
-				index = components.indexOf(selectedComponent);
-		
-				//components에서 selectedComponent제거
-				components.remove(selectedComponent);
-		
+				dx = selectedComponent.getStartP().x-firstP.x;
+				dy = selectedComponent.getStartP().y-firstP.y;
+				
 				Point startP = selectedComponent.getStartP();
 				int width = selectedComponent.getWidth();
 				int height = selectedComponent.getHeight();
 				
-				tempComponent.setSize(startP, width, height);
-				tempComponent.setHighlightColor();
-				
-				dx = selectedComponent.getStartP().x-firstP.x;
-				dy = selectedComponent.getStartP().y-firstP.y;
-			}
-			else{
-				tempComponent.setDefaultColor();
+				unchangedComponent.setSize(startP, width, height);
 			}
 		}
-		public void mouseReleased(MouseEvent e){	
+		public void mouseReleased(MouseEvent e){
+			System.out.println("enter mouse release");
 			lastP.x = e.getX();
 			lastP.y = e.getY();
 			
 			if(selectedComponent == null){
+				drawNewComponent = false;
+				
 				Component newComponent;
 				
 				//새 컴포넌트를 리스트에 추가한다
@@ -173,90 +165,81 @@ public class EditorPanel extends JPanel {
 				
 				addComponent(newComponent);
 			}
-			else{
-				Point startP = tempComponent.getStartP();
-				int width = tempComponent.getWidth();
-				int height = tempComponent.getHeight();
-				
-				selectedComponent.setSize(startP, width, height);
-				addComponent(selectedComponent);
-			}
 			
 			//에디터 패널 갱신
 			repaint();
-			
-			drawTemp = false;
 		}
 	}
 	class EditorMouseMotionAdapter extends MouseMotionAdapter{
-		 public void mouseDragged(MouseEvent e){
-			 drawTemp = true;
-			 
+		 public void mouseDragged(MouseEvent e){ 
+			 System.out.println("enter mouse dragg");
 			 if(selectedComponent == null){
+				 drawNewComponent = true;
+				 
 				 tempP.x = e.getX();
 				 tempP.y = e.getY();
 				 
-				 tempComponent.setSize(firstP, tempP);
+				 newComponent.setSize(firstP, tempP);
 			 }
 			 else{
-				 Direction dir = tempComponent.getResizeHelperDirection(e.getX(), e.getY());
+				 Direction dir = selectedComponent.getResizeHelperDirection(e.getX(), e.getY());
 				 
-				 int width=tempComponent.getWidth();
-				 int height=tempComponent.getHeight();
+				 int width=selectedComponent.getWidth();
+				 int height=selectedComponent.getHeight();
 				 
 				 switch(dir){
 					 case NONE:
 						 tempP.x = e.getX()+dx;
 						 tempP.y = e.getY()+dy;
-						 width = tempComponent.getWidth();
-						 height = tempComponent.getHeight();
+						 width = selectedComponent.getWidth();
+						 height = selectedComponent.getHeight();
 						 break;
 					 case UL:
 						 tempP.x = e.getX();
 						 tempP.y = e.getY();
-						 width = selectedComponent.getWidth()+selectedComponent.getStartP().x-e.getX();
-						 height = selectedComponent.getHeight()+selectedComponent.getStartP().y-e.getY();
+						 width = unchangedComponent.getWidth()+unchangedComponent.getStartP().x-e.getX();
+						 height = unchangedComponent.getHeight()+unchangedComponent.getStartP().y-e.getY();
 						 break;
 					 case U:
-						 tempP.x = tempComponent.getStartP().x;
+						 tempP.x = selectedComponent.getStartP().x;
 						 tempP.y = e.getY();
 						 width = selectedComponent.getWidth();
-						 height = selectedComponent.getHeight()+selectedComponent.getStartP().y-e.getY();
+						 height = unchangedComponent.getHeight()+unchangedComponent.getStartP().y-e.getY();
 						 break;
 					 case UR:
-						 tempP.x = tempComponent.getStartP().x;
+						 tempP.x = selectedComponent.getStartP().x;
 						 tempP.y = e.getY();
-						 width = e.getX()-selectedComponent.getStartP().x;
-						 height = selectedComponent.getHeight()+selectedComponent.getStartP().y-e.getY();
+						 width = e.getX()-unchangedComponent.getStartP().x;
+						 height = unchangedComponent.getHeight()+unchangedComponent.getStartP().y-e.getY();
 						 break;
 					 case R:
-						 tempP.x = tempComponent.getStartP().x;
-						 tempP.y = tempComponent.getStartP().y;
-						 width = e.getX()-selectedComponent.getStartP().x;
+						 tempP.x = selectedComponent.getStartP().x;
+						 tempP.y = selectedComponent.getStartP().y;
+						 width = e.getX()-unchangedComponent.getStartP().x;
 						 height = selectedComponent.getHeight();
 						 break;
 					 case DR:
-						 tempP.x = tempComponent.getStartP().x;
-						 tempP.y = tempComponent.getStartP().y;
-						 width = e.getX()-selectedComponent.getStartP().x;
-						 height = e.getY()-selectedComponent.getStartP().y;
+						 tempP.x = selectedComponent.getStartP().x;
+						 tempP.y = selectedComponent.getStartP().y;
+						 width = e.getX()-unchangedComponent.getStartP().x;
+						 height = e.getY()-unchangedComponent.getStartP().y;
 						 break;
 					 case D:
-						 tempP.x = tempComponent.getStartP().x;
-						 tempP.y = tempComponent.getStartP().y;
+						 tempP.x = selectedComponent.getStartP().x;
+						 tempP.y = selectedComponent.getStartP().y;
 						 width = selectedComponent.getWidth();
 						 height = e.getY()-selectedComponent.getStartP().y;
 						 break;
 					 case DL:
 						 tempP.x = e.getX();
-						 tempP.y = tempComponent.getStartP().y;
-						 width = selectedComponent.getWidth()+selectedComponent.getStartP().x-e.getX();
+						 tempP.y = selectedComponent.getStartP().y;
+						 width = unchangedComponent.getWidth()+unchangedComponent.getStartP().x-e.getX();
 						 height = e.getY()-selectedComponent.getStartP().y;
 						 break;
 					 case L:
 						 tempP.x = e.getX();
-						 tempP.y = tempComponent.getStartP().y;
-						 width = selectedComponent.getWidth()+selectedComponent.getStartP().x-e.getX();
+						 tempP.y = selectedComponent.getStartP().y;
+						 width = unchangedComponent.getWidth()+unchangedComponent.getStartP().x-e.getX();
 						 height = selectedComponent.getHeight();
 						 break;
 					default:
@@ -266,7 +249,7 @@ public class EditorPanel extends JPanel {
 				 width = Math.max(width, 12);
 				 height = Math.max(height, 12);
 				 
-				 tempComponent.setSize(tempP, width, height);
+				 selectedComponent.setSize(tempP, width, height);
 			 }
 			 repaint();
 		 }
