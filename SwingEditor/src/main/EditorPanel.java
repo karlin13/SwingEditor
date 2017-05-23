@@ -262,6 +262,10 @@ public class EditorPanel extends JPanel {
 					default:
 						break;
 				 }
+				 
+				 width = Math.max(width, 12);
+				 height = Math.max(height, 12);
+				 
 				 tempComponent.setSize(tempP, width, height);
 			 }
 			 repaint();
