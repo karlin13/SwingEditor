@@ -134,7 +134,6 @@ public class EditorPanel extends JPanel {
 			}
 		}
 		public void mousePressed(MouseEvent e){
-			System.out.println("enter mouse press");
 			firstP.x = e.getX();
 			firstP.y = e.getY();
 			
@@ -150,7 +149,6 @@ public class EditorPanel extends JPanel {
 			}
 		}
 		public void mouseReleased(MouseEvent e){
-			System.out.println("enter mouse release");
 			lastP.x = e.getX();
 			lastP.y = e.getY();
 			
@@ -172,8 +170,7 @@ public class EditorPanel extends JPanel {
 	}
 	class EditorMouseMotionAdapter extends MouseMotionAdapter{
 		 public void mouseDragged(MouseEvent e){ 
-			 System.out.println("enter mouse dragg");
-			 if(selectedComponent == null){
+			if(selectedComponent == null){
 				 drawNewComponent = true;
 				 
 				 tempP.x = e.getX();
