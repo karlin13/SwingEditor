@@ -117,12 +117,6 @@ public class EditorPanel extends JPanel {
 					if(component.selected(e.getX(), e.getY())){
 						selectedComponent = component;
 						selectedComponent.setHighlightColor();
-						
-						Point startP = selectedComponent.getStartP();
-						int width = selectedComponent.getWidth();
-						int height = selectedComponent.getHeight();
-						
-						unchangedComponent.setSize(startP, width, height);
 						break;
 					}
 				}
