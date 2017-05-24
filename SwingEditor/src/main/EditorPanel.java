@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import component.Component;
+import component.ComponentFactory;
+import component.ComponentType;
 import component.Direction;
 import component.RectangleComponent;
 
@@ -37,14 +39,18 @@ public class EditorPanel extends JPanel {
 	
 	private boolean drawNewComponent;
 	
+	private ComponentType type;
+	
 	//operations
 	public EditorPanel() {
 		initContextMenu();
 		
+		type = ComponentType.RECTANGLE;
+		
 		components = new LinkedList<Component>();
-		newComponent = new RectangleComponent();
+		newComponent = ComponentFactory.createComponent(type);
 		selectedComponent = null;
-		unchangedComponent = new RectangleComponent();
+		unchangedComponent = ComponentFactory.createComponent(type);
 		
 		firstP = new Point();
 		lastP = new Point();
@@ -66,6 +72,11 @@ public class EditorPanel extends JPanel {
 		
 		contextMenu.add(deleteComponentMenu);
 	}
+	
+	public List<Component> getAllComponent(){
+		return components;
+	}
+	
 	private void deleteComponentItemAction(){
 		if(selectedComponent != null){
 			deleteComponent();
@@ -73,14 +84,23 @@ public class EditorPanel extends JPanel {
 		repaint();
 	}
 	
-	private void addComponent(Component component){
+	public void addComponent(Component component){
 		components.add(component);
 	}
 	private void deleteComponent(){
 		components.remove(selectedComponent);
 		selectedComponent = null;
 	}
-	
+	public void deleteAllComponent(){
+		selectedComponent = null;
+		
+		for(int i=0;i<components.size();i++)
+			components.remove(i);
+	}
+	// 외부에서 editor panel repaint()를 호출하기 위한 메소드
+	public void _repaint(){
+		repaint();
+	}
 	@Override
 	public Dimension getPreferredSize(){
 		return new Dimension(200,200);

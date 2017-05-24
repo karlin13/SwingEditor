@@ -130,6 +130,25 @@ public abstract class Component {
 		color = Color.BLUE;
 	}
 	
+	public String toJson(){
+		//x, y, width, height, componentType
+		final String OPEN_BRACKET = "{";
+		final String CLOSE_BRACKET = "}";
+		final String QUOTE = "\"";
+		final String COMMA = ",";
+		final String COLON = ":";
+		
+		//TOOD: add component name
+		String jsonString = OPEN_BRACKET
+							+QUOTE+"x"+QUOTE+COLON+QUOTE+startP.x+QUOTE+COMMA
+							+QUOTE+"y"+QUOTE+COLON+QUOTE+startP.y+QUOTE+COMMA
+							+QUOTE+"width"+QUOTE+COLON+QUOTE+width+QUOTE+COMMA
+							+QUOTE+"height"+QUOTE+COLON+QUOTE+height+QUOTE+COMMA
+							+QUOTE+"type"+QUOTE+COLON+QUOTE+componentType+QUOTE
+							+CLOSE_BRACKET;
+		
+		return jsonString;
+	}
 	// getters
 	public Point getStartP(){return startP;}
 	public int getWidth(){return width;}

@@ -12,6 +12,22 @@ public class RectangleComponent extends Component{
 		
 		shape = new Rectangle(startP.x, startP.y, width, height);
 	}
+	public RectangleComponent(int x, int y, int width, int height){
+		super();
+		
+		startP = new Point();
+		componentType = ComponentType.RECTANGLE;
+		setDefaultColor();
+		
+		startP.x = x;
+		startP.y = y;
+		this.width = width;
+		this.height = height;
+		
+		shape = new Rectangle(startP.x, startP.y, width, height);
+		
+		setResizeHelper();
+	}
 
 	@Override
 	public void setSize(Point start, int width, int height) {
