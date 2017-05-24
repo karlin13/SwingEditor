@@ -27,42 +27,8 @@ public class Window extends JFrame {
 		setContentPane(contentPane);
 		
 		editorPane = new EditorPanel();
-		editorPane.setBounds(50, 100, 433, 283);
+		editorPane.setBounds(0, 0, 433, 283);
 		contentPane.add(editorPane);
 		editorPane.setLayout(null);
-	}
-	
-	public void _newAction(){
-		Utility._new(editorPane);
-	}
-	
-	public void openAction(){
-		try {
-			Utility.open(this, editorPane);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void saveAction(){
-		try {
-			Utility.save(this, editorPane);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
-	
-	public void saveAsAction(){
-		try {
-			Utility.saveAs(this, editorPane);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
