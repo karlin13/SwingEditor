@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -14,37 +15,85 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import component.Component;
+import component.ComponentFactory;
+import component.ComponentType;
 import component.Direction;
 import component.RectangleComponent;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * 에디터 패널
+ * @author karlin
+ *
+ */
 public class EditorPanel extends JPanel {
 	//attributes
+	/**
+	 * 컴포넌트를 선택한 뒤 우클릭하면 나오는 contextMenu
+	 */
 	JPopupMenu contextMenu;
 	
+	/**
+	 * 지금까지 생성된 컴포넌트들을 저장하고 있는 컨테이너입니다.
+	 */
 	private List<Component> components;
-	private Component newComponent;
+	/**
+	 * 컴포넌트 name 만들때 사용되는 ID
+	 */
+	private int componentID;
+	
+	/**
+	 * 새로운 컴포넌트를 생성할 때
+	 * 마우스 드래그 할 때 보여지는 컴포넌트입니다.
+	 */
+	private Component tempComponent;
+	/**
+	 * 현재 선택된 컴포넌트입니다.
+	 */
 	private Component selectedComponent;
+	/**
+	 * 컴포넌트가 리사이징 되기 전의 정보를 저장하고 있습니다. 
+	 * 
+	 * 컴포넌트 리사이징 시 높이와 너비를 구하기 위해
+	 * 컴포넌트가 리사이징 되기 전의 정보가 필요합니다.
+	 */
 	private Component unchangedComponent;
 	
 	private Point firstP;
 	private Point lastP;
 	private Point tempP;
 	
+	/**
+	 * 컴포넌트를 선택할 때 
+	 * 컴포넌트의 시작 좌표와 컴포넌트를 클릭한 좌표의 차를 저장하여 
+	 * 컴포넌트 이동 시 이 정보를 이용합니다.
+	 */
 	private int dx, dy;//컴포넌트 이동할 때 쓰는 변수
 	
-	private boolean drawNewComponent;
+	/**
+	 * tempComponent를 그릴지 말지를 결정합니다.
+	 */
+	private boolean drawTempComponent;
+	
+	/**
+	 * 컴포넌트의 종류
+	 */
+	private ComponentType type;
 	
 	//operations
 	public EditorPanel() {
 		initContextMenu();
 		
+		type = ComponentType.RECTANGLE;
+		
 		components = new LinkedList<Component>();
-		newComponent = new RectangleComponent();
+		componentID = -1;
+		
+		tempComponent = ComponentFactory.createComponent(type, "tempComponent");
 		selectedComponent = null;
-		unchangedComponent = new RectangleComponent();
+		unchangedComponent = ComponentFactory.createComponent(type, "unchanged");
 		
 		firstP = new Point();
 		lastP = new Point();
@@ -52,7 +101,13 @@ public class EditorPanel extends JPanel {
 		
 		addMouseListener(new EditorMouseAdapter());
 		addMouseMotionListener(new EditorMouseMotionAdapter());
+		
+		//배경색 흰색으로 설정
+		setBackground(Color.WHITE);
 	}
+	/**
+	 * contextMenu를 초기화합니다
+	 */
 	private void initContextMenu(){
 		contextMenu = new JPopupMenu();
 		JMenuItem deleteComponentMenu = new JMenuItem("delete");
@@ -66,21 +121,57 @@ public class EditorPanel extends JPanel {
 		
 		contextMenu.add(deleteComponentMenu);
 	}
+	
+	public List<Component> getAllComponent(){
+		return components;
+	}
+	
 	private void deleteComponentItemAction(){
 		if(selectedComponent != null){
 			deleteComponent();
 		}
 		repaint();
 	}
-	
-	private void addComponent(Component component){
+	/**
+	 * 새로운 컴포넌트를 추가합니다
+	 * @param component
+	 */
+	public void addComponent(Component component){
+		System.out.println(component.getName());
 		components.add(component);
 	}
+	/**
+	 * 현재 선택된 컴포넌트를 삭제합니다
+	 */
 	private void deleteComponent(){
 		components.remove(selectedComponent);
 		selectedComponent = null;
 	}
-	
+	/**
+	 * 현재까지 그려진 모든 컴포넌트를 삭제합니다.
+	 */
+	public void deleteAllComponent(){
+		selectedComponent = null;
+		
+		for(int i=0;i<components.size();i++)
+			components.remove(i);
+	}
+	/**
+	 * 컴포넌트의 name 필드는 type + ID입니다 (ex. RECTANGLE1, RECTANGLE7...)
+	 * 새로운 컴포넌트를 생성할 때 그 컴포넌트의 ID를 반환하는 메소드입니다. 
+	 * @return componentID
+	 */
+	public int getNextComponentID(){
+		componentID = (componentID+1)%Integer.MAX_VALUE;
+		return componentID;
+	}
+	/**
+	 * EditorPanel의 repaint() 메소드를 외부에서도 호출해야 할 때가 있어서 만든 메소드입니다
+	 * repaint()메소드를 호출합니다.
+	 */
+	public void _repaint(){
+		repaint();
+	}
 	@Override
 	public Dimension getPreferredSize(){
 		return new Dimension(200,200);
@@ -94,8 +185,8 @@ public class EditorPanel extends JPanel {
 			component.draw(g);
 		}
 		//임시 컴포넌트 그림
-		if(drawNewComponent){
-			newComponent.draw(g);
+		if(drawTempComponent){
+			tempComponent.draw(g);
 		}
 		//선택된 컴포넌트 resizeHelper 표시
 		if(selectedComponent != null){
@@ -147,15 +238,20 @@ public class EditorPanel extends JPanel {
 			lastP.y = e.getY();
 			
 			if(selectedComponent == null){
-				drawNewComponent = false;
+				drawTempComponent = false;
 				
-				Component newComponent;
-				
-				//새 컴포넌트를 리스트에 추가한다
-				newComponent = new RectangleComponent();
-				newComponent.setSize(firstP , lastP);
-				
-				addComponent(newComponent);
+				//너비와 높이가 최소 너비, 높이보다 클 때만 새로운 컴포넌트를 생성한다
+				if(Math.abs(firstP.x-lastP.x) > Component.MIN_WIDTH && Math.abs(firstP.y-lastP.y) > Component.MIN_HEIGHT){
+					Component newComponent;
+					
+					String name = type.toString() + getNextComponentID();
+					
+					//새 컴포넌트를 리스트에 추가한다
+					newComponent = new RectangleComponent(name);
+					newComponent.setSize(firstP , lastP);
+					
+					addComponent(newComponent);
+				}
 			}
 			
 			//에디터 패널 갱신
@@ -165,12 +261,12 @@ public class EditorPanel extends JPanel {
 	class EditorMouseMotionAdapter extends MouseMotionAdapter{
 		 public void mouseDragged(MouseEvent e){ 
 			if(selectedComponent == null){
-				 drawNewComponent = true;
+				 drawTempComponent = true;
 				 
 				 tempP.x = e.getX();
 				 tempP.y = e.getY();
 				 
-				 newComponent.setSize(firstP, tempP);
+				 tempComponent.setSize(firstP, tempP);
 			 }
 			 else{
 				 Direction dir = selectedComponent.getResizeHelperDirection(e.getX(), e.getY());
@@ -237,8 +333,8 @@ public class EditorPanel extends JPanel {
 						break;
 				 }
 				 
-				 width = Math.max(width, 12);
-				 height = Math.max(height, 12);
+				 width = Math.max(width, Component.MIN_WIDTH);
+				 height = Math.max(height, Component.MIN_HEIGHT);
 				 
 				 selectedComponent.setSize(tempP, width, height);
 			 }

@@ -11,15 +11,42 @@ public abstract class Component {
 	//attributes
 	protected Shape shape;
 	
+	/**
+	 * 시작 좌표
+	 */
 	protected Point startP;
+	/**
+	 * 너비
+	 */
 	protected int width;
+	/**
+	 * 높이
+	 */
 	protected int height;
-	protected ComponentType componentType;
-	
+	/**
+	 * 컴포넌트 종류
+	 */
+	protected ComponentType type;
+	/**
+	 * 컴포넌트 이름
+	 */
+	protected String name;
+	/**
+	 * 컴포넌트 색
+	 */
 	private Color color;
 	
+	/**
+	 * 누르면 리사이징 할 수 있는 작은 정사각형
+	 */
 	private Rectangle[] resizeHelper;
+	/**
+	 * resizeHelper 변의 길이
+	 */
 	private final int resizeHelperLen = 12;
+	
+	public static final int MIN_WIDTH = 12;
+	public static final int MIN_HEIGHT = 12;
 	
 	// operations
 	public Component(){
@@ -27,7 +54,9 @@ public abstract class Component {
 				
 		for(int i=0;i<8;i++)
 			resizeHelper[i] = new Rectangle();
-	
+		
+		startP = new Point();
+		setDefaultColor();
 	}
 	
 	public abstract void setSize(Point start, int width, int height);
@@ -40,6 +69,10 @@ public abstract class Component {
 		g2.setColor(color);
 		g2.draw(shape);
 	}
+	
+	/**
+	 * 컴포넌트의 위치 정보(시작 좌표, 너비, 높이)가 변경됐을때 resizeHelper의 위치도 조정하기 위해 호출하는 함수
+	 */
 	protected void setResizeHelper(){
 		int startX = startP.x;
 		int midX = startP.x+(width/2);
@@ -64,6 +97,11 @@ public abstract class Component {
 		for(int i=0;i<resizeHelper.length;i++)
 			g2.fill(resizeHelper[i]);
 	}
+	/**
+	 * 현재 눌려진 resizeHelper의 방향을 반환한다
+	 * @param p
+	 * @return
+	 */
 	public Direction getResizeHelperDirection(Point p){
 		if(resizeHelper[0].contains(p)){
 			return Direction.UL;
@@ -93,6 +131,11 @@ public abstract class Component {
 			return Direction.NONE;
 		}
 	}
+	/**
+	 * 현재 눌려진 resizeHelper의 방향을 반환한다
+	 * @param p
+	 * @return
+	 */
 	public Direction getResizeHelperDirection(int x, int y){
 		if(resizeHelper[0].contains(x, y)){
 			return Direction.UL;
@@ -123,16 +166,48 @@ public abstract class Component {
 		}
 	}
 	
+	/**
+	 * 선택 안됐을때 색
+	 */
 	public void setDefaultColor(){
-		color = Color.CYAN;
+		color = Color.BLACK;
 	}
+	/**
+	 * 선택 됐을떄 색
+	 */
 	public void setHighlightColor(){
 		color = Color.BLUE;
 	}
+
+	/**
+	 * 컴포넌트의 시작 x좌표, 시작 y좌표, 너비, 높이, 이름, 종류를 json으로 만들어서 반환한다
+	 * @return
+	 */
+	public String toJson(){
+		//x, y, width, height, componentType
+		final String OPEN_BRACKET = "{";
+		final String CLOSE_BRACKET = "}";
+		final String QUOTE = "\"";
+		final String COMMA = ",";
+		final String COLON = ":";
+		
+		//TOOD: add component name
+		String jsonString = OPEN_BRACKET
+							+QUOTE+"x"+QUOTE+COLON+QUOTE+startP.x+QUOTE+COMMA
+							+QUOTE+"y"+QUOTE+COLON+QUOTE+startP.y+QUOTE+COMMA
+							+QUOTE+"width"+QUOTE+COLON+QUOTE+width+QUOTE+COMMA
+							+QUOTE+"height"+QUOTE+COLON+QUOTE+height+QUOTE+COMMA
+							+QUOTE+"type"+QUOTE+COLON+QUOTE+type+QUOTE
+							+QUOTE+"name"+QUOTE+COLON+QUOTE+name+QUOTE
+							+CLOSE_BRACKET;
+		
+		return jsonString;
+	}
 	
-	// getters
+	//getters
 	public Point getStartP(){return startP;}
 	public int getWidth(){return width;}
 	public int getHeight(){return height;}
-	public ComponentType getComponentType(){return componentType;}
+	public ComponentType getType(){return type;}
+	public String getName(){return name;}
 }
