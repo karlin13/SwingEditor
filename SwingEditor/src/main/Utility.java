@@ -99,11 +99,16 @@ public class Utility {
 		List<Component> list = panel.getAllComponent();
 
 		StringBuilder jsonData = new StringBuilder("");
-
+		//opening bracket 추가
 		jsonData.append("{\"components\":[");
+		//components to json
 		for (Component component : list) {
-			jsonData.append(component.toJson());
+			jsonData.append(component.toJson()+",");
 		}
+		// 마지막 , 지운다
+		int lastIndex = jsonData.length()-1;
+		jsonData.deleteCharAt(lastIndex);
+		//closing bracket 추가
 		jsonData.append("]}");
 
 		// write json data to file
