@@ -14,7 +14,7 @@ public abstract class Component {
 	protected Point startP;
 	protected int width;
 	protected int height;
-	protected ComponentType componentType;
+	protected ComponentType type;
 	
 	private Color color;
 	
@@ -144,7 +144,7 @@ public abstract class Component {
 							+QUOTE+"y"+QUOTE+COLON+QUOTE+startP.y+QUOTE+COMMA
 							+QUOTE+"width"+QUOTE+COLON+QUOTE+width+QUOTE+COMMA
 							+QUOTE+"height"+QUOTE+COLON+QUOTE+height+QUOTE+COMMA
-							+QUOTE+"type"+QUOTE+COLON+QUOTE+componentType+QUOTE
+							+QUOTE+"type"+QUOTE+COLON+QUOTE+type+QUOTE
 							+CLOSE_BRACKET;
 		
 		return jsonString;
@@ -153,5 +153,5 @@ public abstract class Component {
 	public Point getStartP(){return startP;}
 	public int getWidth(){return width;}
 	public int getHeight(){return height;}
-	public ComponentType getComponentType(){return componentType;}
+	public ComponentType getComponentType(){return type;}
 }
