@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -58,6 +59,9 @@ public class EditorPanel extends JPanel {
 		
 		addMouseListener(new EditorMouseAdapter());
 		addMouseMotionListener(new EditorMouseMotionAdapter());
+		
+		//배경색 흰색으로 설정
+		setBackground(Color.WHITE);
 	}
 	private void initContextMenu(){
 		contextMenu = new JPopupMenu();
