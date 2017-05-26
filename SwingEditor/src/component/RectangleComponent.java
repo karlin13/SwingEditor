@@ -5,24 +5,21 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 public class RectangleComponent extends Component{
-	public RectangleComponent(){
-		startP = new Point();
+	public RectangleComponent(String name){
 		type = ComponentType.RECTANGLE;
-		setDefaultColor();
+		this.name = name;
 		
 		shape = new Rectangle(startP.x, startP.y, width, height);
 	}
-	public RectangleComponent(int x, int y, int width, int height){
+	public RectangleComponent(int x, int y, int width, int height, String name){
 		super();
 		
-		startP = new Point();
 		type = ComponentType.RECTANGLE;
-		setDefaultColor();
-		
 		startP.x = x;
 		startP.y = y;
 		this.width = width;
 		this.height = height;
+		this.name = name;
 		
 		shape = new Rectangle(startP.x, startP.y, width, height);
 		

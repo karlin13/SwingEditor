@@ -28,7 +28,9 @@ public class EditorPanel extends JPanel {
 	JPopupMenu contextMenu;
 	
 	private List<Component> components;
-	private Component newComponent;
+	private int componentID;
+	
+	private Component tempComponent;
 	private Component selectedComponent;
 	private Component unchangedComponent;
 	
@@ -38,7 +40,7 @@ public class EditorPanel extends JPanel {
 	
 	private int dx, dy;//컴포넌트 이동할 때 쓰는 변수
 	
-	private boolean drawNewComponent;
+	private boolean drawTempComponent;
 	
 	private ComponentType type;
 	
@@ -49,9 +51,11 @@ public class EditorPanel extends JPanel {
 		type = ComponentType.RECTANGLE;
 		
 		components = new LinkedList<Component>();
-		newComponent = ComponentFactory.createComponent(type);
+		componentID = -1;
+		
+		tempComponent = ComponentFactory.createComponent(type, "tempComponent");
 		selectedComponent = null;
-		unchangedComponent = ComponentFactory.createComponent(type);
+		unchangedComponent = ComponentFactory.createComponent(type, "unchanged");
 		
 		firstP = new Point();
 		lastP = new Point();
@@ -89,6 +93,7 @@ public class EditorPanel extends JPanel {
 	}
 	
 	public void addComponent(Component component){
+		System.out.println(component.getName());
 		components.add(component);
 	}
 	private void deleteComponent(){
@@ -100,6 +105,11 @@ public class EditorPanel extends JPanel {
 		
 		for(int i=0;i<components.size();i++)
 			components.remove(i);
+	}
+	//새로운 컴포넌트 추가할 시 새로운 컴포넌트의 ID를 반환한다
+	public int getNextComponentID(){
+		componentID = (componentID+1)%Integer.MAX_VALUE;
+		return componentID;
 	}
 	// 외부에서 editor panel repaint()를 호출하기 위한 메소드
 	public void _repaint(){
@@ -118,8 +128,8 @@ public class EditorPanel extends JPanel {
 			component.draw(g);
 		}
 		//임시 컴포넌트 그림
-		if(drawNewComponent){
-			newComponent.draw(g);
+		if(drawTempComponent){
+			tempComponent.draw(g);
 		}
 		//선택된 컴포넌트 resizeHelper 표시
 		if(selectedComponent != null){
@@ -171,12 +181,14 @@ public class EditorPanel extends JPanel {
 			lastP.y = e.getY();
 			
 			if(selectedComponent == null){
-				drawNewComponent = false;
+				drawTempComponent = false;
 				
 				Component newComponent;
 				
+				String name = type.toString() + getNextComponentID();
+				
 				//새 컴포넌트를 리스트에 추가한다
-				newComponent = new RectangleComponent();
+				newComponent = new RectangleComponent(name);
 				newComponent.setSize(firstP , lastP);
 				
 				addComponent(newComponent);
@@ -189,12 +201,12 @@ public class EditorPanel extends JPanel {
 	class EditorMouseMotionAdapter extends MouseMotionAdapter{
 		 public void mouseDragged(MouseEvent e){ 
 			if(selectedComponent == null){
-				 drawNewComponent = true;
+				 drawTempComponent = true;
 				 
 				 tempP.x = e.getX();
 				 tempP.y = e.getY();
 				 
-				 newComponent.setSize(firstP, tempP);
+				 tempComponent.setSize(firstP, tempP);
 			 }
 			 else{
 				 Direction dir = selectedComponent.getResizeHelperDirection(e.getX(), e.getY());

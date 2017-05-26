@@ -55,7 +55,7 @@ public class Utility {
 		JSONArray memberArray = (JSONArray) jsonObj.get("components");
 
 		int x, y, width, height;
-		String typeString;
+		String typeString, name;
 
 		for (int i = 0; i < memberArray.size(); i++) {
 			// parse one by one
@@ -65,12 +65,13 @@ public class Utility {
 			y = Integer.parseInt(tempObj.get("y").toString());
 			width = Integer.parseInt(tempObj.get("width").toString());
 			height = Integer.parseInt(tempObj.get("height").toString());
+			name = tempObj.get("name").toString();
 			typeString = tempObj.get("type").toString();
 
 			ComponentType type = ComponentType.fromString(typeString);
 
 			// create component
-			Component component = ComponentFactory.createComponent(type, x, y, width, height);
+			Component component = ComponentFactory.createComponent(type, x, y, width, height, name);
 			// add component
 			panel.addComponent(component);
 		}

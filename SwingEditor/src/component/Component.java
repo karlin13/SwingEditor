@@ -29,7 +29,9 @@ public abstract class Component {
 				
 		for(int i=0;i<8;i++)
 			resizeHelper[i] = new Rectangle();
-	
+		
+		startP = new Point();
+		setDefaultColor();
 	}
 	
 	public abstract void setSize(Point start, int width, int height);
@@ -147,6 +149,7 @@ public abstract class Component {
 							+QUOTE+"width"+QUOTE+COLON+QUOTE+width+QUOTE+COMMA
 							+QUOTE+"height"+QUOTE+COLON+QUOTE+height+QUOTE+COMMA
 							+QUOTE+"type"+QUOTE+COLON+QUOTE+type+QUOTE
+							+QUOTE+"name"+QUOTE+COLON+QUOTE+name+QUOTE
 							+CLOSE_BRACKET;
 		
 		return jsonString;
@@ -155,5 +158,6 @@ public abstract class Component {
 	public Point getStartP(){return startP;}
 	public int getWidth(){return width;}
 	public int getHeight(){return height;}
-	public ComponentType getComponentType(){return type;}
+	public ComponentType getType(){return type;}
+	public String getName(){return name;}
 }
