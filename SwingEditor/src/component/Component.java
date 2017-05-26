@@ -45,6 +45,9 @@ public abstract class Component {
 	 */
 	private final int resizeHelperLen = 12;
 	
+	public static final int MIN_WIDTH = 12;
+	public static final int MIN_HEIGHT = 12;
+	
 	// operations
 	public Component(){
 		resizeHelper = new Rectangle[8];

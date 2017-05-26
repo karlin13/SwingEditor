@@ -240,15 +240,18 @@ public class EditorPanel extends JPanel {
 			if(selectedComponent == null){
 				drawTempComponent = false;
 				
-				Component newComponent;
-				
-				String name = type.toString() + getNextComponentID();
-				
-				//새 컴포넌트를 리스트에 추가한다
-				newComponent = new RectangleComponent(name);
-				newComponent.setSize(firstP , lastP);
-				
-				addComponent(newComponent);
+				//너비와 높이가 최소 너비, 높이보다 클 때만 새로운 컴포넌트를 생성한다
+				if(Math.abs(firstP.x-lastP.x) > Component.MIN_WIDTH && Math.abs(firstP.y-lastP.y) > Component.MIN_HEIGHT){
+					Component newComponent;
+					
+					String name = type.toString() + getNextComponentID();
+					
+					//새 컴포넌트를 리스트에 추가한다
+					newComponent = new RectangleComponent(name);
+					newComponent.setSize(firstP , lastP);
+					
+					addComponent(newComponent);
+				}
 			}
 			
 			//에디터 패널 갱신
@@ -330,8 +333,8 @@ public class EditorPanel extends JPanel {
 						break;
 				 }
 				 
-				 width = Math.max(width, 12);
-				 height = Math.max(height, 12);
+				 width = Math.max(width, Component.MIN_WIDTH);
+				 height = Math.max(height, Component.MIN_HEIGHT);
 				 
 				 selectedComponent.setSize(tempP, width, height);
 			 }
