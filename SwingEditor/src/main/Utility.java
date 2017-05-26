@@ -21,6 +21,13 @@ import component.ComponentFactory;
 import component.ComponentType;
 
 //singletone
+/**
+ * Utility는 1. 새로 만들기 2. 파일 열기 3. 파일 저장 4, 다른 이름으로 저장 5. 프로그램 종료
+ * 총 5가지 기능을 수행하는 클래스입니다.
+ * Utility 클래스는 인스턴스화 할 수 없습니다.
+ * @author karlin
+ *
+ */
 public class Utility {
 	private static Utility instance = new Utility();
 	private static String filePath;
