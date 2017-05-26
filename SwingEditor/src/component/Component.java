@@ -15,6 +15,8 @@ public abstract class Component {
 	protected int width;
 	protected int height;
 	protected ComponentType type;
+	//TODO: component 추가할 때 새로운 이름 만들어서 name을 초기화한다
+	protected String name;
 	
 	private Color color;
 	
