@@ -153,8 +153,9 @@ public class EditorPanel extends JPanel {
 	public void deleteAllComponent(){
 		selectedComponent = null;
 		
-		for(int i=0;i<components.size();i++)
-			components.remove(i);
+		int size = components.size();
+		for(int i=0;i<size;i++)
+			components.remove(0);
 	}
 	/**
 	 * 컴포넌트의 name 필드는 type + ID입니다 (ex. RECTANGLE1, RECTANGLE7...)

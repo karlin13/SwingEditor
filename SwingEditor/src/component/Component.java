@@ -197,7 +197,7 @@ public abstract class Component {
 							+QUOTE+"y"+QUOTE+COLON+QUOTE+startP.y+QUOTE+COMMA
 							+QUOTE+"width"+QUOTE+COLON+QUOTE+width+QUOTE+COMMA
 							+QUOTE+"height"+QUOTE+COLON+QUOTE+height+QUOTE+COMMA
-							+QUOTE+"type"+QUOTE+COLON+QUOTE+type+QUOTE
+							+QUOTE+"type"+QUOTE+COLON+QUOTE+type+QUOTE+COMMA
 							+QUOTE+"name"+QUOTE+COLON+QUOTE+name+QUOTE
 							+CLOSE_BRACKET;
 		

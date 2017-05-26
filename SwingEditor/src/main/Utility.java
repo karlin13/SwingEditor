@@ -40,6 +40,7 @@ public class Utility {
 
 	public static void _new(EditorPanel panel) {
 		panel.deleteAllComponent();
+		panel._repaint();
 	}
 
 	public static void open(Window parent, EditorPanel panel) throws IOException, ParseException {

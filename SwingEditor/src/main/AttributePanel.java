@@ -82,8 +82,8 @@ public class AttributePanel extends JPanel {
 		textField_1.setText(component.getStartP().y+"");
 		textField_2.setText(component.getHeight()+"");
 		textField_3.setText(component.getWidth()+"");
-		comboBox.setSelectedItem(component.getComponentType());
-	//	textField_4.setText(component.get);
+		comboBox.setSelectedItem(component.getType());
+		textField_4.setText(component.getName());
 	
 	}
 }
