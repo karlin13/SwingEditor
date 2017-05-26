@@ -16,9 +16,13 @@ public class Window extends JFrame {
 
 	private JPanel contentPane;
 	private EditorPanel editorPane;
+	private AttributePanel attributePane;
+
 	
 	public Window() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		setBounds(100, 100, 900, 600);
 		setBounds(0, 0, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -27,8 +31,18 @@ public class Window extends JFrame {
 		setContentPane(contentPane);
 		
 		editorPane = new EditorPanel();
+		editorPane.setBounds(365, 15, 635, 500);
 		editorPane.setBounds(0, 0, 433, 283);
 		contentPane.add(editorPane);
-		editorPane.setLayout(null);
+		editorPane.setLayout(null);	
+		
+		attributePane = new AttributePanel();
+		attributePane.setBounds(100, 100, 243, 234);
+		contentPane.add(attributePane);
+		attributePane.setLayout(null);
+		
+
+
+
 	}
 }
