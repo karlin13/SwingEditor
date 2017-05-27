@@ -25,7 +25,7 @@ public class AttributePanel extends JPanel {
 		add(lblNewLabel);
 		
 		textField = new JTextField();
-		textField.setBounds(200, 15, 150, 25);
+		textField.setBounds(150, 15, 150, 25);
 		add(textField);
 		textField.setColumns(10);
 		
@@ -34,7 +34,7 @@ public class AttributePanel extends JPanel {
 		add(lblNewLabel_1);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(200, 45, 150, 25);
+		textField_1.setBounds(150, 45, 150, 25);
 		add(textField_1);
 		textField_1.setColumns(10);
 		
@@ -43,7 +43,7 @@ public class AttributePanel extends JPanel {
 		add(lblNewLabel_2);
 		
 		textField_2 = new JTextField();
-		textField_2.setBounds(200, 75, 150, 25);
+		textField_2.setBounds(150, 75, 150, 25);
 		add(textField_2);
 		textField_2.setColumns(10);
 		
@@ -52,7 +52,7 @@ public class AttributePanel extends JPanel {
 		add(lblNewLabel_3);
 		
 		textField_3 = new JTextField();
-		textField_3.setBounds(200, 105, 150, 25);
+		textField_3.setBounds(150, 105, 150, 25);
 		add(textField_3);
 		textField_3.setColumns(10);
 		
@@ -61,7 +61,7 @@ public class AttributePanel extends JPanel {
 		add(lblNewLabel_4);
 		
 		comboBox = new JComboBox<String>();
-		comboBox.setBounds(200, 135, 150, 25);
+		comboBox.setBounds(150, 135, 150, 25);
 		for(int i=0; i<ComponentType.length; i++)
 			comboBox.addItem(ComponentType[i]);
 		add(comboBox);
@@ -71,7 +71,7 @@ public class AttributePanel extends JPanel {
 		add(lblNewLabel_5);
 		
 		textField_4 = new JTextField();
-		textField_4.setBounds(200, 165, 150, 25);
+		textField_4.setBounds(150, 165, 150, 25);
 		add(textField_4);
 		textField_4.setColumns(10);
 		
@@ -82,8 +82,9 @@ public class AttributePanel extends JPanel {
 		textField_1.setText(component.getStartP().y+"");
 		textField_2.setText(component.getHeight()+"");
 		textField_3.setText(component.getWidth()+"");
-		comboBox.setSelectedItem(component.getComponentType());
-	//	textField_4.setText(component.get);
-	
+		comboBox.setSelectedItem(component.getType());
+		textField_4.setText(component.getName());
 	}
+
+	
 }
