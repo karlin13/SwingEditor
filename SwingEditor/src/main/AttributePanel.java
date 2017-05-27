@@ -3,8 +3,6 @@ package main;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import component.Component;
 import component.ComponentFactory;
@@ -132,11 +130,10 @@ public class AttributePanel extends JPanel implements _Observable{
 			int y = Integer.parseInt(textField_1.getText());
 			int width = Integer.parseInt(textField_3.getText());
 			int height = Integer.parseInt(textField_2.getText());
-			ComponentType type = ComponentType.RECTANGLE;//fromString(comboBox.getSelectedItem().toString());
+			ComponentType type = ComponentType.fromString(comboBox.getSelectedItem().toString());
 			String name = textField_4.getText();
 
 			Component dummyComponent = ComponentFactory.createComponent(type, x, y, width, height, name);
-			System.out.println(dummyComponent.toJson());
 			observer.notifyObservables(dummyComponent);
 		}
 		catch(NumberFormatException exp){

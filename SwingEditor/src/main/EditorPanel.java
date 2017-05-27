@@ -142,7 +142,6 @@ public class EditorPanel extends JPanel implements _Observable{
 	 */
 	public void addComponent(Component component){
 		componentID = (componentID+1)%Integer.MAX_VALUE;
-		System.out.println(component.getName());
 		components.add(component);
 	}
 	/**

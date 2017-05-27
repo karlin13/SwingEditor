@@ -198,7 +198,7 @@ public abstract class Component {
 							+QUOTE+"width"+QUOTE+COLON+QUOTE+width+QUOTE+COMMA
 							+QUOTE+"height"+QUOTE+COLON+QUOTE+height+QUOTE+COMMA
 							+QUOTE+"type"+QUOTE+COLON+QUOTE+type+QUOTE+COMMA
-							+QUOTE+"name"+QUOTE+COLON+QUOTE+name+QUOTE
+							+QUOTE+"name"+QUOTE+COLON+QUOTE+name+QUOTE+COMMA
 							+CLOSE_BRACKET;
 		
 		return jsonString;
