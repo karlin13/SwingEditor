@@ -364,6 +364,8 @@ public class EditorPanel extends JPanel implements _Observable{
 			selectedComponent.setSize(component.getStartP(), component.getWidth(), component.getHeight());
 			selectedComponent.setName(component.getName());
 		}
+		
+		_repaint();
 	}
 	
 }

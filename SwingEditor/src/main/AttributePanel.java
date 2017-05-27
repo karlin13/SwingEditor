@@ -3,11 +3,17 @@ package main;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import component.Component;
 import component.ComponentFactory;
 import component.ComponentType;
 import util._Observable;
 import util._Observer;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JComboBox;
 
@@ -81,6 +87,20 @@ public class AttributePanel extends JPanel implements _Observable{
 		textField_4.setBounds(200, 165, 150, 25);
 		add(textField_4);
 		textField_4.setColumns(10);	
+		
+		// 이벤트 핸들러 추가
+		// 값을 변경하고 엔터 누르면 컴포넌트에 반영된다
+		KeyAdapter keyAdapter = new KeyAdapter(){
+			public void keyPressed(KeyEvent e){
+				notifyObserver();
+			}
+		};
+		
+		textField.addKeyListener(keyAdapter);
+		textField_1.addKeyListener(keyAdapter);
+		textField_2.addKeyListener(keyAdapter);
+		textField_3.addKeyListener(keyAdapter);
+		textField_4.addKeyListener(keyAdapter);
 	}
 	
 	public void setTextField(Component component){
@@ -88,8 +108,7 @@ public class AttributePanel extends JPanel implements _Observable{
 		textField_1.setText(component.getStartP().y+"");
 		textField_2.setText(component.getHeight()+"");
 		textField_3.setText(component.getWidth()+"");
-		//TODO: 지금 아래의 코드로는 알맞은 컴포넌트 타입이 선택 안됨
-		comboBox.setSelectedItem(component.getType());
+		comboBox.setSelectedItem(component.getType().toString());
 		textField_4.setText(component.getName());
 	
 	}
@@ -98,7 +117,7 @@ public class AttributePanel extends JPanel implements _Observable{
 		textField_1.setText("");
 		textField_2.setText("");
 		textField_3.setText("");
-		comboBox.setSelectedItem(ComponentType.NONE);
+		comboBox.setSelectedItem(ComponentType.NONE.toString());
 		textField_4.setText("");
 	}
 	
@@ -107,15 +126,22 @@ public class AttributePanel extends JPanel implements _Observable{
 	}
 	@Override
 	public void notifyObserver() {
-		int x = Integer.parseInt(textField.getText());
-		int y = Integer.parseInt(textField.getText());
-		int width = Integer.parseInt(textField_3.getText());
-		int height = Integer.parseInt(textField_2.getText());
-		ComponentType type = ComponentType.fromString(comboBox.getSelectedItem().toString());
-		String name = textField_4.getText();
-		
-		Component dummyComponent = ComponentFactory.createComponent(type, x, y, width, height, name);
-		observer.notifyObservables(dummyComponent);
+		// 어느 값 중 하나가 잘못된 형식이면 에러낸다
+		try{
+			int x = Integer.parseInt(textField.getText());
+			int y = Integer.parseInt(textField_1.getText());
+			int width = Integer.parseInt(textField_3.getText());
+			int height = Integer.parseInt(textField_2.getText());
+			ComponentType type = ComponentType.RECTANGLE;//fromString(comboBox.getSelectedItem().toString());
+			String name = textField_4.getText();
+
+			Component dummyComponent = ComponentFactory.createComponent(type, x, y, width, height, name);
+			System.out.println(dummyComponent.toJson());
+			observer.notifyObservables(dummyComponent);
+		}
+		catch(NumberFormatException exp){
+			//TODO: 텍스트 필드를 빨간색으로 표시
+		}
 	}
 	@Override
 	public void updateObservable(Component component) {
