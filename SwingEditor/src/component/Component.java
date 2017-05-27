@@ -210,4 +210,7 @@ public abstract class Component {
 	public int getHeight(){return height;}
 	public ComponentType getType(){return type;}
 	public String getName(){return name;}
+	
+	//setters
+	public void setName(String name){this.name = name;}
 }

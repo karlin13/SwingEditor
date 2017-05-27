@@ -19,6 +19,8 @@ import component.ComponentFactory;
 import component.ComponentType;
 import component.Direction;
 import component.RectangleComponent;
+import util._Observable;
+import util._Observer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +30,7 @@ import java.awt.event.ActionListener;
  * @author karlin
  *
  */
-public class EditorPanel extends JPanel {
+public class EditorPanel extends JPanel implements _Observable{
 	//attributes
 	/**
 	 * 컴포넌트를 선택한 뒤 우클릭하면 나오는 contextMenu
@@ -81,6 +83,8 @@ public class EditorPanel extends JPanel {
 	 * 컴포넌트의 종류
 	 */
 	private ComponentType type;
+	
+	private _Observer observer;
 	
 	//operations
 	public EditorPanel() {
@@ -212,7 +216,8 @@ public class EditorPanel extends JPanel {
 						break;
 					}
 				}
-
+				
+				notifyObserver();
 				repaint();
 			}
 			else if(e.getButton() == MouseEvent.BUTTON3 && selectedComponent != null){
@@ -255,6 +260,7 @@ public class EditorPanel extends JPanel {
 				}
 			}
 			
+			notifyObserver();
 			//에디터 패널 갱신
 			repaint();
 		}
@@ -339,8 +345,25 @@ public class EditorPanel extends JPanel {
 				 
 				 selectedComponent.setSize(tempP, width, height);
 			 }
+			 
+			 notifyObserver();
 			 repaint();
 		 }
+	}
+	
+	public void setObserver(_Observer observer){
+		this.observer = observer;
+	}
+	@Override
+	public void notifyObserver() {
+		observer.notifyObservables(selectedComponent);
+	}
+	@Override
+	public void updateObservable(Component component) {
+		if(selectedComponent != null){
+			selectedComponent.setSize(component.getStartP(), component.getWidth(), component.getHeight());
+			selectedComponent.setName(component.getName());
+		}
 	}
 	
 }
