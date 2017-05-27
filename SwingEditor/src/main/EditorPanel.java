@@ -89,7 +89,7 @@ public class EditorPanel extends JPanel {
 		type = ComponentType.RECTANGLE;
 		
 		components = new LinkedList<Component>();
-		componentID = -1;
+		componentID = 0;
 		
 		tempComponent = ComponentFactory.createComponent(type, "tempComponent");
 		selectedComponent = null;
@@ -137,6 +137,7 @@ public class EditorPanel extends JPanel {
 	 * @param component
 	 */
 	public void addComponent(Component component){
+		componentID = (componentID+1)%Integer.MAX_VALUE;
 		System.out.println(component.getName());
 		components.add(component);
 	}
@@ -163,7 +164,6 @@ public class EditorPanel extends JPanel {
 	 * @return componentID
 	 */
 	public int getNextComponentID(){
-		componentID = (componentID+1)%Integer.MAX_VALUE;
 		return componentID;
 	}
 	/**
