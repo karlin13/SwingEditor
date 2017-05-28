@@ -39,7 +39,7 @@ public class Utility {
 	}
 
 	public static void _new(EditorPanel panel) {
-		panel.deleteAllComponent();
+		panel.emptyPanel();
 		panel._repaint();
 	}
 

@@ -154,7 +154,9 @@ public class EditorPanel extends JPanel implements _Observable{
 	/**
 	 * 현재까지 그려진 모든 컴포넌트를 삭제합니다.
 	 */
-	public void deleteAllComponent(){
+	public void emptyPanel(){
+		componentID = 0;
+		
 		selectedComponent = null;
 		
 		int size = components.size();
