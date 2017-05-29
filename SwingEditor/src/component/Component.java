@@ -234,7 +234,5 @@ public abstract class Component {
 					  +COMMA+height+COMMA+width+CLOSEBRACKET+SEMICOLON;
 		
 		return code;
-		
-
 	}
 }

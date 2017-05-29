@@ -26,7 +26,7 @@ public class RectangleComponent extends Component{
 		setResizeHelper();
 	}
 	/**
-	 * 시작 좌표, 너비, 높이를 인자로 받아서 컴포넌트의 startP, width, height를 설정한다
+	 * �떆�옉 醫뚰몴, �꼫鍮�, �넂�씠瑜� �씤�옄濡� 諛쏆븘�꽌 而댄룷�꼳�듃�쓽 startP, width, height瑜� �꽕�젙�븳�떎
 	 * @param start
 	 * @param width
 	 * @param height
@@ -44,13 +44,13 @@ public class RectangleComponent extends Component{
 		setResizeHelper();
 	}
 	/**
-	 * 두 Point 객체를 인자로 받아서 컴포넌트의 startP, width, height를 설정한다
+	 * �몢 Point 媛앹껜瑜� �씤�옄濡� 諛쏆븘�꽌 而댄룷�꼳�듃�쓽 startP, width, height瑜� �꽕�젙�븳�떎
 	 * @param first
 	 * @param last
 	 */
 	@Override
 	public void setSize(Point first, Point last) {
-		// 작은 x,y을 찾아 start* 변수에 저장
+		// �옉�� x,y�쓣 李얠븘 start* 蹂��닔�뿉 ���옣
 		startP.x = (first.x>=last.x)?last.x:first.x;
 		startP.y = (first.y>=last.y)?last.y:first.y;
 		width = Math.abs(first.x-last.x);
@@ -62,9 +62,9 @@ public class RectangleComponent extends Component{
 		setResizeHelper();
 	}
 	/**
-	 * p가 컴포넌트 내부의 좌표인지 확인한다
+	 * p媛� 而댄룷�꼳�듃 �궡遺��쓽 醫뚰몴�씤吏� �솗�씤�븳�떎
 	 * @param p 
-	 * @return p가 컴포넌트 내부에 있으면 true 아니면 false
+	 * @return p媛� 而댄룷�꼳�듃 �궡遺��뿉 �엳�쑝硫� true �븘�땲硫� false
 	 */
 	@Override
 	public boolean selected(Point p) {
@@ -75,10 +75,10 @@ public class RectangleComponent extends Component{
 	}
 
 	/**
-	 * (x, y)가 컴포넌트 내부의 좌표인지 확인한다
+	 * (x, y)媛� 而댄룷�꼳�듃 �궡遺��쓽 醫뚰몴�씤吏� �솗�씤�븳�떎
 	 * @param x
 	 * @param y
-	 * @return (x, y)가 컴포넌트 내부에 있으면 true 아니면 false
+	 * @return (x, y)媛� 而댄룷�꼳�듃 �궡遺��뿉 �엳�쑝硫� true �븘�땲硫� false
 	 */
 	@Override
 	public boolean selected(int x, int y) {
@@ -86,6 +86,28 @@ public class RectangleComponent extends Component{
 		boolean isSelected = rectangle.contains(x, y);
 		
 		return isSelected;
+	}
+	@Override
+	public String toJavaCode(){
+		final String OPENBRACKET = "(";
+		final String CLOSEBRACKET = ")";
+		final String QUOTE = "\"";
+		final String COMMA = ",";
+		final String DOT = ".";
+		final String EQUAL = "=";
+		final String SPACE =" ";
+	    final String SEMICOLON = ";";
+	    final String NEWLINE = "\n";
+		
+		final String COMPONENTCLASS = "Component";
+		final String RECTANGLECLASS = "RectangleComponent";
+				
+		String code = COMPONENTCLASS+SPACE+name+EQUAL+"new"+SPACE+RECTANGLECLASS
+					  +OPENBRACKET+QUOTE+name+QUOTE+CLOSEBRACKET+SEMICOLON+NEWLINE
+					  +name+DOT+"setSize"+OPENBRACKET+"new"+SPACE+"Point"+OPENBRACKET+startP+CLOSEBRACKET
+					  +COMMA+height+COMMA+width+CLOSEBRACKET+SEMICOLON;
+		
+		return code;
 	}
 
 }
