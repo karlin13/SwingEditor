@@ -72,7 +72,7 @@ public class AttributePanel extends JPanel implements _Observable{
 		add(lblNewLabel_4);
 		
 		comboBox = new JComboBox<String>();
-		comboBox.setBounds(200, 135, 150, 25);
+		comboBox.setBounds(150, 135, 150, 25);
 		for(int i=0; i<componentType.length; i++)
 			comboBox.addItem(componentType[i]);
 		add(comboBox);
@@ -86,8 +86,8 @@ public class AttributePanel extends JPanel implements _Observable{
 		add(textField_4);
 		textField_4.setColumns(10);	
 		
-		// 이벤트 핸들러 추가
-		// 값을 변경하고 엔터 누르면 컴포넌트에 반영된다
+		// �씠踰ㅽ듃 �빖�뱾�윭 異붽�
+		// 媛믪쓣 蹂�寃쏀븯怨� �뿏�꽣 �늻瑜대㈃ 而댄룷�꼳�듃�뿉 諛섏쁺�맂�떎
 		KeyAdapter keyAdapter = new KeyAdapter(){
 			public void keyPressed(KeyEvent e){
 				notifyObserver();
@@ -124,7 +124,7 @@ public class AttributePanel extends JPanel implements _Observable{
 	}
 	@Override
 	public void notifyObserver() {
-		// 어느 값 중 하나가 잘못된 형식이면 에러낸다
+		// �뼱�뒓 媛� 以� �븯�굹媛� �옒紐삳맂 �삎�떇�씠硫� �뿉�윭�궦�떎
 		try{
 			int x = Integer.parseInt(textField.getText());
 			int y = Integer.parseInt(textField_1.getText());
@@ -137,7 +137,7 @@ public class AttributePanel extends JPanel implements _Observable{
 			observer.notifyObservables(dummyComponent);
 		}
 		catch(NumberFormatException exp){
-			//TODO: 텍스트 필드를 빨간색으로 표시
+			//TODO: �뀓�뒪�듃 �븘�뱶瑜� 鍮④컙�깋�쑝濡� �몴�떆
 		}
 	}
 	@Override

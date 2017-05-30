@@ -12,36 +12,36 @@ public abstract class Component {
 	protected Shape shape;
 	
 	/**
-	 * 시작 좌표
+	 * �떆�옉 醫뚰몴
 	 */
 	protected Point startP;
 	/**
-	 * 너비
+	 * �꼫鍮�
 	 */
 	protected int width;
 	/**
-	 * 높이
+	 * �넂�씠
 	 */
 	protected int height;
 	/**
-	 * 컴포넌트 종류
+	 * 而댄룷�꼳�듃 醫낅쪟
 	 */
 	protected ComponentType type;
 	/**
-	 * 컴포넌트 이름
+	 * 而댄룷�꼳�듃 �씠由�
 	 */
 	protected String name;
 	/**
-	 * 컴포넌트 색
+	 * 而댄룷�꼳�듃 �깋
 	 */
 	private Color color;
 	
 	/**
-	 * 누르면 리사이징 할 수 있는 작은 정사각형
+	 * �늻瑜대㈃ 由ъ궗�씠吏� �븷 �닔 �엳�뒗 �옉�� �젙�궗媛곹삎
 	 */
 	private Rectangle[] resizeHelper;
 	/**
-	 * resizeHelper 변의 길이
+	 * resizeHelper 蹂��쓽 湲몄씠
 	 */
 	private final int resizeHelperLen = 12;
 	
@@ -71,7 +71,7 @@ public abstract class Component {
 	}
 	
 	/**
-	 * 컴포넌트의 위치 정보(시작 좌표, 너비, 높이)가 변경됐을때 resizeHelper의 위치도 조정하기 위해 호출하는 함수
+	 * 而댄룷�꼳�듃�쓽 �쐞移� �젙蹂�(�떆�옉 醫뚰몴, �꼫鍮�, �넂�씠)媛� 蹂�寃쎈릱�쓣�븣 resizeHelper�쓽 �쐞移섎룄 議곗젙�븯湲� �쐞�빐 �샇異쒗븯�뒗 �븿�닔
 	 */
 	protected void setResizeHelper(){
 		int startX = startP.x;
@@ -98,7 +98,7 @@ public abstract class Component {
 			g2.fill(resizeHelper[i]);
 	}
 	/**
-	 * 현재 눌려진 resizeHelper의 방향을 반환한다
+	 * �쁽�옱 �닃�젮吏� resizeHelper�쓽 諛⑺뼢�쓣 諛섑솚�븳�떎
 	 * @param p
 	 * @return
 	 */
@@ -132,7 +132,7 @@ public abstract class Component {
 		}
 	}
 	/**
-	 * 현재 눌려진 resizeHelper의 방향을 반환한다
+	 * �쁽�옱 �닃�젮吏� resizeHelper�쓽 諛⑺뼢�쓣 諛섑솚�븳�떎
 	 * @param p
 	 * @return
 	 */
@@ -167,20 +167,20 @@ public abstract class Component {
 	}
 	
 	/**
-	 * 선택 안됐을때 색
+	 * �꽑�깮 �븞�릱�쓣�븣 �깋
 	 */
 	public void setDefaultColor(){
 		color = Color.BLACK;
 	}
 	/**
-	 * 선택 됐을떄 색
+	 * �꽑�깮 �릱�쓣�뻹 �깋
 	 */
 	public void setHighlightColor(){
 		color = Color.BLUE;
 	}
 
 	/**
-	 * 컴포넌트의 시작 x좌표, 시작 y좌표, 너비, 높이, 이름, 종류를 json으로 만들어서 반환한다
+	 * 而댄룷�꼳�듃�쓽 �떆�옉 x醫뚰몴, �떆�옉 y醫뚰몴, �꼫鍮�, �넂�씠, �씠由�, 醫낅쪟瑜� json�쑝濡� 留뚮뱾�뼱�꽌 諛섑솚�븳�떎
 	 * @return
 	 */
 	public String toJson(){
@@ -213,4 +213,26 @@ public abstract class Component {
 	
 	//setters
 	public void setName(String name){this.name = name;}
+	
+	public String toJavaCode(){
+		final String OPENBRACKET = "(";
+		final String CLOSEBRACKET = ")";
+		final String QUOTE = "\"";
+		final String COMMA = ",";
+		final String DOT = ".";
+		final String EQUAL = "=";
+		final String SPACE =" ";
+	    final String SEMICOLON = ";";
+	    final String NEWLINE = "\n";
+		
+		final String COMPONENTCLASS = "Component";
+		final String RECTANGLECLASS = "RectangleComponent";
+		
+		String code = COMPONENTCLASS+SPACE+name+EQUAL+"new"+SPACE+RECTANGLECLASS
+					  +OPENBRACKET+QUOTE+name+QUOTE+CLOSEBRACKET+SEMICOLON+NEWLINE
+					  +name+DOT+"setSize"+OPENBRACKET+"new"+SPACE+"Point"+OPENBRACKET+startP+CLOSEBRACKET
+					  +COMMA+height+COMMA+width+CLOSEBRACKET+SEMICOLON;
+		
+		return code;
+	}
 }
