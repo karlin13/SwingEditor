@@ -214,25 +214,5 @@ public abstract class Component {
 	//setters
 	public void setName(String name){this.name = name;}
 	
-	public String toJavaCode(){
-		final String OPENBRACKET = "(";
-		final String CLOSEBRACKET = ")";
-		final String QUOTE = "\"";
-		final String COMMA = ",";
-		final String DOT = ".";
-		final String EQUAL = "=";
-		final String SPACE =" ";
-	    final String SEMICOLON = ";";
-	    final String NEWLINE = "\n";
-		
-		final String COMPONENTCLASS = "Component";
-		final String RECTANGLECLASS = "RectangleComponent";
-		
-		String code = COMPONENTCLASS+SPACE+name+EQUAL+"new"+SPACE+RECTANGLECLASS
-					  +OPENBRACKET+QUOTE+name+QUOTE+CLOSEBRACKET+SEMICOLON+NEWLINE
-					  +name+DOT+"setSize"+OPENBRACKET+"new"+SPACE+"Point"+OPENBRACKET+startP+CLOSEBRACKET
-					  +COMMA+height+COMMA+width+CLOSEBRACKET+SEMICOLON;
-		
-		return code;
-	}
+	public abstract String toJavaCode();
 }
