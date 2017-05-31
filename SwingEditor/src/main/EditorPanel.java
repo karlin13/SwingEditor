@@ -135,8 +135,8 @@ public class EditorPanel extends JPanel implements _Observable{
 		if(selectedComponent != null){
 			deleteComponent();
 		}
-
-		repaint();
+		
+		notifyObserver();
 	}
 	/**
 	 * 새로운 컴포넌트를 추가합니다
@@ -146,8 +146,6 @@ public class EditorPanel extends JPanel implements _Observable{
 	public void addComponent(Component component){
 		componentID = (componentID+1)%Integer.MAX_VALUE;
 		components.add(component);
-		
-		Utility.genCode(this);
 	}
 	/**
 	 * 현재 선택된 컴포넌트를 삭제합니다
@@ -156,8 +154,6 @@ public class EditorPanel extends JPanel implements _Observable{
 	private void deleteComponent(){
 		components.remove(selectedComponent);
 		selectedComponent = null;
-
-		Utility.genCode(this);
 	}
 	/**
 	 * 현재까지 그려진 모든 컴포넌트를 삭제합니다.
@@ -172,7 +168,7 @@ public class EditorPanel extends JPanel implements _Observable{
 		for(int i=0;i<size;i++)
 			components.remove(0);
 		
-		Utility.genCode(this);
+		notifyObserver();
 	}
 	/**
 	 * 컴포넌트의 name 필드는 type + ID입니다 (ex. RECTANGLE1, RECTANGLE7...)
@@ -230,7 +226,7 @@ public class EditorPanel extends JPanel implements _Observable{
 				}
 				
 				notifyObserver();
-				repaint();
+				_repaint();
 			}
 			else if(e.getButton() == MouseEvent.BUTTON3 && selectedComponent != null){
 				contextMenu.show(e.getComponent(), e.getX(), e.getY());
@@ -359,7 +355,7 @@ public class EditorPanel extends JPanel implements _Observable{
 			 }
 			 
 			 notifyObserver();
-			 repaint();
+			 _repaint();
 		 }
 	}
 	
@@ -378,6 +374,7 @@ public class EditorPanel extends JPanel implements _Observable{
 		}
 		
 		_repaint();
+		Utility.genCode(this);
 	}
 	
 }
