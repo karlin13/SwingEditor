@@ -10,6 +10,7 @@ import component.ComponentType;
 import util._Observable;
 import util._Observer;
 
+import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -133,7 +134,7 @@ public class AttributePanel extends JPanel implements _Observable{
 			ComponentType type = ComponentType.fromString(comboBox.getSelectedItem().toString());
 			String name = textField_4.getText();
 
-			Component dummyComponent = ComponentFactory.createComponent(type, x, y, width, height, name);
+			Component dummyComponent = ComponentFactory.createComponent(type, new Point(x,y), width, height, name);
 			observer.notifyObservables(dummyComponent);
 		}
 		catch(NumberFormatException exp){

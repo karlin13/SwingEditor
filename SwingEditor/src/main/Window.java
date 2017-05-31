@@ -63,4 +63,7 @@ public class Window extends JFrame implements _Observer{
 			observables.get(i).updateObservable(component);
 		
 	}
+	public void addComponent(Component component){
+		editorPane.addComponent(component);
+	}
 }

@@ -11,12 +11,12 @@ public class RectangleComponent extends Component{
 		
 		shape = new Rectangle(startP.x, startP.y, width, height);
 	}
-	public RectangleComponent(int x, int y, int width, int height, String name){
+	public RectangleComponent(Point startP, int width, int height, String name){
 		super();
 		
 		type = ComponentType.RECTANGLE;
-		startP.x = x;
-		startP.y = y;
+		this.startP.x = startP.x;
+		this.startP.y = startP.y;
 		this.width = width;
 		this.height = height;
 		this.name = name;

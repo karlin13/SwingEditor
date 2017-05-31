@@ -1,5 +1,7 @@
 package component;
 
+import java.awt.Point;
+
 public class ComponentFactory {
 	/**
 	 * 컴포넌트의 종류가 type인 컴포넌트를 생성하여 반환한다
@@ -28,12 +30,12 @@ public class ComponentFactory {
 	 * @param name
 	 * @return
 	 */
-	public static Component createComponent(ComponentType type, int x, int y, int width, int height, String name){
+	public static Component createComponent(ComponentType type, Point startP, int width, int height, String name){
 		Component component = null;
 		
 		switch(type){
 			case RECTANGLE:
-				component = new RectangleComponent(x, y, width, height, name);
+				component = new RectangleComponent(startP, width, height, name);
 				break;
 		}
 		

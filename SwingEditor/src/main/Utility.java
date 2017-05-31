@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -79,7 +80,7 @@ public class Utility {
 			ComponentType type = ComponentType.fromString(typeString);
 
 			// create component
-			Component component = ComponentFactory.createComponent(type, x, y, width, height, name);
+			Component component = ComponentFactory.createComponent(type, new Point(x,y), width, height, name);
 			// add component
 			panel.addComponent(component);
 		}
