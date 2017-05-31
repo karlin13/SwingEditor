@@ -165,7 +165,9 @@ public class Utility {
 		//write code to file
 		FileWriter fw;
 		try {
-			fw = new FileWriter("/home/karlin/GitClones/SwingEditor/SwingEditor/src//main/Main.java");
+			String rootPath = System.getProperty("user.dir");
+			
+			fw = new FileWriter(rootPath+"/src//main/Main.java");
 			fw.write(code.toString());
 			fw.close();
 		} catch (IOException e) {
