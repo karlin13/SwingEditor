@@ -3,6 +3,8 @@ package main;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +30,11 @@ public class Window extends JFrame implements _Observer{
 	private List<_Observable> observables;
 	
 	public Window() {
+		addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent e){
+				editorPane.emptyPanel();
+			}
+		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setBounds(100, 100, 1050, 600);

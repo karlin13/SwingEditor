@@ -44,7 +44,7 @@ public class Utility {
 		panel._repaint();
 	}
 
-	public static void open(Window parent, EditorPanel panel) throws IOException, ParseException {
+	public static void open(Window parent, EditorPanel panel){
 		// clear editor panel
 		_new(panel);
 
@@ -119,7 +119,7 @@ public class Utility {
 		fw.close();
 	}
 
-	public static void saveAs(Window parent, EditorPanel panel) throws IOException {
+	public static void saveAs(Window parent, EditorPanel panel) {
 		// open file dialog
 		int result = fileChooser.showSaveDialog(parent);
 		if (result == JFileChooser.APPROVE_OPTION) {
@@ -127,22 +127,51 @@ public class Utility {
 		}
 
 		// make json data
-		List<Component> list = panel.getAllComponent();
+		List<Component> components = panel.getAllComponent();
 
 		StringBuilder jsonData = new StringBuilder("");
 
 		jsonData.append("{\"components\":[");
-		for (Component component : list) {
+		for (Component component : components) {
 			jsonData.append(component.toJson());
 		}
 		jsonData.append("]}");
 
 		// write json data to file
-		FileWriter fw = new FileWriter(filePath);
-		fw.write(jsonData.toString());
-		fw.close();
+		try {
+			FileWriter fw = new FileWriter(filePath);
+			fw.write(jsonData.toString());
+			fw.close();
+		} catch (IOException e) {
+			//TODO: show message dialog
+		}
 	}
-
+	public static void genCode(EditorPanel panel){
+		String firstHalf = "package main;\n\nimport java.awt.EventQueue;\nimport java.awt.Point;\nimport component.Component;\nimport component.RectangleComponent;\n\npublic class Main{\n\tpublic static void main(String[] args) {\n\t\tEventQueue.invokeLater(new Runnable() {\n\t\t\tpublic void run() {\n\t\t\t\ttry {\n\t\t\t\t\tWindow frame = new Window();\n\n";
+		String lastHalf = "\t\t\t\t\tframe.setVisible(true);\n\t\t\t\t} catch (Exception e) {\n\t\t\t\t\te.printStackTrace();\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\t}\n}\n";
+		
+		//generate java code
+		StringBuilder code = new StringBuilder("");
+		code.append(firstHalf);
+		
+		List<Component> components = panel.getAllComponent();
+		
+		//TODO: toJavaCode imcomplete
+		for(Component component:components){
+			code.append(component.toJavaCode());
+		}
+		code.append(lastHalf);
+		
+		//write code to file
+		FileWriter fw;
+		try {
+			fw = new FileWriter("/home/karlin/GitClones/SwingEditor/SwingEditor/src//main/Main.java");
+			fw.write(code.toString());
+			fw.close();
+		} catch (IOException e) {
+			//TODO: show message dialog
+		}
+	}
 	public static void close() {
 		System.exit(0);
 	}

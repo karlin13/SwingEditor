@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -134,25 +135,33 @@ public class EditorPanel extends JPanel implements _Observable{
 		if(selectedComponent != null){
 			deleteComponent();
 		}
+
 		repaint();
 	}
 	/**
 	 * 새로운 컴포넌트를 추가합니다
 	 * @param component
+	 * @throws IOException 
 	 */
 	public void addComponent(Component component){
 		componentID = (componentID+1)%Integer.MAX_VALUE;
 		components.add(component);
+		
+		Utility.genCode(this);
 	}
 	/**
 	 * 현재 선택된 컴포넌트를 삭제합니다
+	 * @throws IOException 
 	 */
 	private void deleteComponent(){
 		components.remove(selectedComponent);
 		selectedComponent = null;
+
+		Utility.genCode(this);
 	}
 	/**
 	 * 현재까지 그려진 모든 컴포넌트를 삭제합니다.
+	 * @throws IOException 
 	 */
 	public void emptyPanel(){
 		componentID = 0;
@@ -162,6 +171,8 @@ public class EditorPanel extends JPanel implements _Observable{
 		int size = components.size();
 		for(int i=0;i<size;i++)
 			components.remove(0);
+		
+		Utility.genCode(this);
 	}
 	/**
 	 * 컴포넌트의 name 필드는 type + ID입니다 (ex. RECTANGLE1, RECTANGLE7...)

@@ -102,11 +102,12 @@ public class RectangleComponent extends Component{
 		final String COMPONENTCLASS = "Component";
 		final String ACTUALCLASS = "RectangleComponent";
 		
-		String code = COMPONENTCLASS+SPACE+name+EQUAL+"new"+SPACE+ACTUALCLASS
-					  +OPENBRACKET+QUOTE+name+QUOTE+CLOSEBRACKET+SEMICOLON+NEWLINE
+		String code = "\t\t\t\t\t"+
+					  COMPONENTCLASS+SPACE+name+EQUAL+"new"+SPACE+ACTUALCLASS
+					  +OPENBRACKET+QUOTE+name+QUOTE+CLOSEBRACKET+SEMICOLON+NEWLINE+"\t\t\t\t\t"
 					  +name+DOT+"setSize"+OPENBRACKET+"new"+SPACE+"Point"+OPENBRACKET+startP.x+COMMA+startP.y+CLOSEBRACKET
-					  +COMMA+height+COMMA+width+CLOSEBRACKET+SEMICOLON;
-		
+					  +COMMA+height+COMMA+width+CLOSEBRACKET+SEMICOLON+NEWLINE+"\t\t\t\t\t"
+					  +"frame.addComponent("+name+")"+SEMICOLON+NEWLINE+NEWLINE;
 		return code;
 	}
 }
