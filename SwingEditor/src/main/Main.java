@@ -1,9 +1,6 @@
 package main;
 
 import java.awt.EventQueue;
-import java.awt.Point;
-import component.Component;
-import component.RectangleComponent;
 
 public class Main{
 	public static void main(String[] args) {

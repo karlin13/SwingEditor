@@ -1,7 +1,7 @@
 package util;
 
-import component.Component;
+import component.MockComponent;
 
 public interface _Observer {
-	public void notifyObservables(Component component);
+	public void notifyObservables(MockComponent component);
 }

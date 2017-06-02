@@ -1,118 +1,88 @@
 package main;
 
 import java.awt.Color;
+
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
-import component.Component;
-import component.ComponentFactory;
-import component.ComponentType;
 import component.Direction;
-import component.RectangleComponent;
+import component.MockComponent;
 import util._Observable;
 import util._Observer;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-/**
- * 에디터 패널
- * @author karlin
- *
- */
-public class EditorPanel extends JPanel implements _Observable{
+public class EditorPanel extends JPanel  implements _Observable{
 	//attributes
-	/**
-	 * 컴포넌트를 선택한 뒤 우클릭하면 나오는 contextMenu
-	 */
-	JPopupMenu contextMenu;
-	
-	/**
-	 * 지금까지 생성된 컴포넌트들을 저장하고 있는 컨테이너입니다.
-	 */
-	private List<Component> components;
-	/**
-	 * 컴포넌트 name 만들때 사용되는 ID
-	 */
-	private int componentID;
-	
-	/**
-	 * 새로운 컴포넌트를 생성할 때
-	 * 마우스 드래그 할 때 보여지는 컴포넌트입니다.
-	 */
-	private Component tempComponent;
-	/**
-	 * 현재 선택된 컴포넌트입니다.
-	 */
-	private Component selectedComponent;
-	/**
-	 * 컴포넌트가 리사이징 되기 전의 정보를 저장하고 있습니다. 
-	 * 
-	 * 컴포넌트 리사이징 시 높이와 너비를 구하기 위해
-	 * 컴포넌트가 리사이징 되기 전의 정보가 필요합니다.
-	 */
-	private Component unchangedComponent;
+	private JPopupMenu contextMenu;
 	
 	private Point firstP;
 	private Point lastP;
 	private Point tempP;
 	
-	/**
-	 * 컴포넌트를 선택할 때 
-	 * 컴포넌트의 시작 좌표와 컴포넌트를 클릭한 좌표의 차를 저장하여 
-	 * 컴포넌트 이동 시 이 정보를 이용합니다.
-	 */
-	private int dx, dy;//컴포넌트 이동할 때 쓰는 변수
+	private MockComponent newComp;
+	private MockComponent selectedComp;
+	private MockComponent unchangedComp;
+	private MockComponent dummyComp;
 	
-	/**
-	 * tempComponent를 그릴지 말지를 결정합니다.
-	 */
-	private boolean drawTempComponent;
-	
-	/**
-	 * 컴포넌트의 종류
-	 */
-	private ComponentType type;
+	private boolean compSelected;
+	private Direction dir;
 	
 	private _Observer observer;
 	
 	//operations
-	public EditorPanel() {
+	public EditorPanel() {	
 		initContextMenu();
-		
-		type = ComponentType.RECTANGLE;
-		
-		components = new LinkedList<Component>();
-		componentID = 0;
-		
-		tempComponent = ComponentFactory.createComponent(type, "tempComponent");
-		selectedComponent = null;
-		unchangedComponent = ComponentFactory.createComponent(type, "unchanged");
 		
 		firstP = new Point();
 		lastP = new Point();
 		tempP = new Point();
 		
-		addMouseListener(new EditorMouseAdapter());
-		addMouseMotionListener(new EditorMouseMotionAdapter());
+		unchangedComp = new MockComponent("unchanged");
+		dummyComp = new MockComponent("dummy");
 		
+		addMouseListener(new EditorMouseAdapter());
+		addMouseMotionListener((MouseMotionListener) new EditorMouseMotionAdapter());
+
 		//배경색 흰색으로 설정
 		setBackground(Color.WHITE);
 	}
-	/**
-	 * contextMenu를 초기화합니다
-	 */
+	
+	public void update(){
+		revalidate();
+		repaint();
+	}
+	public void _add(MockComponent component){
+		add(component);
+		update();
+	}
+	public void _remove(MockComponent component){
+		compSelected = false;
+		selectedComp = null;
+		remove(component);
+		update();
+	}
+	public void _removeAll(){
+		compSelected = false;
+		selectedComp = null;
+		notifyObserver();
+		removeAll();
+		update();
+	}
+	private  Component[]_getComponents(){
+		return this.getComponents();
+	}
+	
 	private void initContextMenu(){
 		contextMenu = new JPopupMenu();
 		JMenuItem deleteComponentMenu = new JMenuItem("delete");
@@ -120,261 +90,195 @@ public class EditorPanel extends JPanel implements _Observable{
 		deleteComponentMenu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				deleteComponentItemAction();
+				_remove(selectedComp);
+				notifyObserver();
 			}
         });
 		
 		contextMenu.add(deleteComponentMenu);
 	}
 	
-	public List<Component> getAllComponent(){
-		return components;
-	}
-	
-	private void deleteComponentItemAction(){
-		if(selectedComponent != null){
-			deleteComponent();
-		}
-		
-		notifyObserver();
-	}
-	/**
-	 * 새로운 컴포넌트를 추가합니다
-	 * @param component
-	 * @throws IOException 
-	 */
-	public void addComponent(Component component){
-		componentID = (componentID+1)%Integer.MAX_VALUE;
-		components.add(component);
-	}
-	/**
-	 * 현재 선택된 컴포넌트를 삭제합니다
-	 * @throws IOException 
-	 */
-	private void deleteComponent(){
-		components.remove(selectedComponent);
-		selectedComponent = null;
-	}
-	/**
-	 * 현재까지 그려진 모든 컴포넌트를 삭제합니다.
-	 * @throws IOException 
-	 */
-	public void emptyPanel(){
-		componentID = 0;
-		
-		selectedComponent = null;
-		
-		int size = components.size();
-		for(int i=0;i<size;i++)
-			components.remove(0);
-		
-		notifyObserver();
-	}
-	/**
-	 * 컴포넌트의 name 필드는 type + ID입니다 (ex. RECTANGLE1, RECTANGLE7...)
-	 * 새로운 컴포넌트를 생성할 때 그 컴포넌트의 ID를 반환하는 메소드입니다. 
-	 * @return componentID
-	 */
-	public int getNextComponentID(){
-		return componentID;
-	}
-	/**
-	 * EditorPanel의 repaint() 메소드를 외부에서도 호출해야 할 때가 있어서 만든 메소드입니다
-	 * repaint()메소드를 호출합니다.
-	 */
-	public void _repaint(){
-		repaint();
-	}
 	@Override
 	public Dimension getPreferredSize(){
 		return new Dimension(200,200);
 	}
-	@Override
-	protected void paintComponent(Graphics g){
-		super.paintComponent(g);
-		
-		//현재 저장된 컴포너트 그림
-		for(Component component:components){
-			component.draw(g);
-		}
-		//임시 컴포넌트 그림
-		if(drawTempComponent){
-			tempComponent.draw(g);
-		}
-		//선택된 컴포넌트 resizeHelper 표시
-		if(selectedComponent != null){
-			selectedComponent.drawResizeHelper(g);
-		}
-	}
-	
 	class EditorMouseAdapter extends MouseAdapter{
-		public void mouseClicked(MouseEvent e){
-			if(e.getButton() == MouseEvent.BUTTON1){
-				//이전 selectedComponent의 색을 원래대로 돌려노흔다
-				if(selectedComponent != null)
-					selectedComponent.setDefaultColor();
-				
-				//아무 컴포넌트도 선택되지 않았으면 null
-				selectedComponent = null;
-				
-				for(Component component:components){
-					if(component.selected(e.getX(), e.getY())){
-						selectedComponent = component;
-						selectedComponent.setHighlightColor();
-						break;
-					}
-				}
-				
-				notifyObserver();
-				_repaint();
-			}
-			else if(e.getButton() == MouseEvent.BUTTON3 && selectedComponent != null){
-				contextMenu.show(e.getComponent(), e.getX(), e.getY());
-			}
-		}
 		public void mousePressed(MouseEvent e){
-			firstP.x = e.getX();
-			firstP.y = e.getY();
-			
-			if(selectedComponent != null){
-				dx = selectedComponent.getStartP().x-firstP.x;
-				dy = selectedComponent.getStartP().y-firstP.y;
+			if(compSelected == false){
+				//set firstP
+				firstP.x = e.getX();
+				firstP.y = e.getY();
 				
-				Point startP = selectedComponent.getStartP();
-				int width = selectedComponent.getWidth();
-				int height = selectedComponent.getHeight();
-				
-				unchangedComponent.setSize(startP, width, height);
+				newComp = new MockComponent("hi");
+				_add(newComp);
+			}
+			else{
+				dir = selectedComp.getResizeHelperDirection(e.getX(), e.getY());
+				unchangedComp.setSizeNLocation(selectedComp.getLocation(), selectedComp.getWidth(), selectedComp.getHeight());
 			}
 		}
 		public void mouseReleased(MouseEvent e){
-			lastP.x = e.getX();
-			lastP.y = e.getY();
-			
-			if(selectedComponent == null){
-				drawTempComponent = false;
+			if(compSelected == false){
+				//set lastP
+				lastP.x = e.getX();
+				lastP.y = e.getY();
 				
-				//너비와 높이가 최소 너비, 높이보다 클 때만 새로운 컴포넌트를 생성한다
-				if(Math.abs(firstP.x-lastP.x) > Component.MIN_WIDTH && Math.abs(firstP.y-lastP.y) > Component.MIN_HEIGHT){
-					Component newComponent;
-					
-					String name = type.toString() + getNextComponentID();
-					
-					//새 컴포넌트를 리스트에 추가한다
-					newComponent = new RectangleComponent(name);
-					newComponent.setSize(firstP , lastP);
-					
-					addComponent(newComponent);
-				}
+				//TODO: create class that manages variable names
+				newComp.setSizeNLocation(firstP, lastP);
+				
+				if(Math.abs(firstP.x-lastP.x)<MockComponent.MIN_WIDTH-1 || Math.abs(firstP.y-lastP.y)<MockComponent.MIN_HEIGHT-1)
+					_remove(newComp);
 			}
-			
-			notifyObserver();
-			//에디터 패널 갱신
-			repaint();
+			else{
+				dir = Direction.NONE;
+				notifyObserver();
+			}
+		}
+		public void mouseClicked(MouseEvent e){
+			if(e.getButton() == MouseEvent.BUTTON1){
+				//unhighlight all components
+				Component[] components = _getComponents();
+				for(Component component:components){
+					MockComponent mock = (MockComponent)component;
+					mock.unselect();
+				}
+				
+				//select component
+				Object source = e.getSource();
+				
+				if(source instanceof EditorPanel){
+					compSelected = false;
+					selectedComp = null;
+				}
+				else if(e.getSource() instanceof MockComponent){
+					MockComponent mock = (MockComponent)e.getSource();
+					mock.setDiff(mock.getX(), mock.getY(), e.getX(), e.getY());
+					mock.select();
+					
+					selectedComp = mock;
+					compSelected = true;
+				}
+				
+				notifyObserver();
+			}
+			else if(e.getButton() == MouseEvent.BUTTON3 && selectedComp != null){
+				contextMenu.show(e.getComponent(), e.getX(), e.getY());
+			}
 		}
 	}
+	
+	
+	@Override
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		repaint();
+		
+		if(compSelected == true)
+			selectedComp.drawResizeHelper(g);
+	}
+	
 	class EditorMouseMotionAdapter extends MouseMotionAdapter{
-		 public void mouseDragged(MouseEvent e){ 
-			if(selectedComponent == null){
-				 drawTempComponent = true;
-				 
-				 tempP.x = e.getX();
-				 tempP.y = e.getY();
-				 
-				 tempComponent.setSize(firstP, tempP);
-			 }
-			 else{
-				 Direction dir = selectedComponent.getResizeHelperDirection(e.getX(), e.getY());
-				 
-				 int width=selectedComponent.getWidth();
-				 int height=selectedComponent.getHeight();
-				 
-				 switch(dir){
-					 case NONE:
-						 tempP.x = e.getX()+dx;
-						 tempP.y = e.getY()+dy;
-						 width = selectedComponent.getWidth();
-						 height = selectedComponent.getHeight();
-						 break;
-					 case UL:
-						 tempP.x = e.getX();
-						 tempP.y = e.getY();
-						 width = unchangedComponent.getWidth()+unchangedComponent.getStartP().x-e.getX();
-						 height = unchangedComponent.getHeight()+unchangedComponent.getStartP().y-e.getY();
+		 public void mouseDragged(MouseEvent e){
+			if(compSelected == false){
+				tempP.x = e.getX();
+				tempP.y = e.getY();
+				
+				newComp.setSizeNLocation(firstP, tempP);
+			}
+			else{
+				int width, height;
+				
+				width = selectedComp.getWidth();
+				height = selectedComp.getHeight();
+				
+				switch(dir){
+					case NONE:
+						width = selectedComp.getWidth();
+						height = selectedComp.getHeight();
+						tempP.x = e.getX() + selectedComp.getDx();
+						tempP.y = e.getY() + selectedComp.getDy();
+						break;
+					case UL:
+						 width = unchangedComp.getWidth()+unchangedComp.getX()-e.getX();
+						 height = unchangedComp.getHeight()+unchangedComp.getY()-e.getY();
+						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX():e.getX();
+						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY():e.getY();
 						 break;
 					 case U:
-						 tempP.x = selectedComponent.getStartP().x;
-						 tempP.y = e.getY();
-						 width = selectedComponent.getWidth();
-						 height = unchangedComponent.getHeight()+unchangedComponent.getStartP().y-e.getY();
+						 width = selectedComp.getWidth();
+						 height = unchangedComp.getHeight()+unchangedComp.getY()-e.getY();
+						 tempP.x = selectedComp.getX();
+						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY():e.getY();
 						 break;
 					 case UR:
-						 tempP.x = selectedComponent.getStartP().x;
-						 tempP.y = e.getY();
-						 width = e.getX()-unchangedComponent.getStartP().x;
-						 height = unchangedComponent.getHeight()+unchangedComponent.getStartP().y-e.getY();
+						 width = e.getX()-unchangedComp.getX();
+						 height = unchangedComp.getHeight()+unchangedComp.getY()-e.getY();
+						 tempP.x = selectedComp.getX();
+						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY():e.getY();
 						 break;
 					 case R:
-						 tempP.x = selectedComponent.getStartP().x;
-						 tempP.y = selectedComponent.getStartP().y;
-						 width = e.getX()-unchangedComponent.getStartP().x;
-						 height = selectedComponent.getHeight();
+						 width = e.getX()-unchangedComp.getX();
+						 height = selectedComp.getHeight();
+						 tempP.x = selectedComp.getX();
+						 tempP.y = selectedComp.getY();
 						 break;
 					 case DR:
-						 tempP.x = selectedComponent.getStartP().x;
-						 tempP.y = selectedComponent.getStartP().y;
-						 width = e.getX()-unchangedComponent.getStartP().x;
-						 height = e.getY()-unchangedComponent.getStartP().y;
+						 width = e.getX()-unchangedComp.getX();
+						 height = e.getY()-unchangedComp.getY();
+						 tempP.x = selectedComp.getX();
+						 tempP.y = selectedComp.getY();
 						 break;
 					 case D:
-						 tempP.x = selectedComponent.getStartP().x;
-						 tempP.y = selectedComponent.getStartP().y;
-						 width = selectedComponent.getWidth();
-						 height = e.getY()-selectedComponent.getStartP().y;
+						 width = selectedComp.getWidth();
+						 height = e.getY()-selectedComp.getY();
+						 tempP.x = selectedComp.getX();
+						 tempP.y = selectedComp.getY();
 						 break;
 					 case DL:
-						 tempP.x = e.getX();
-						 tempP.y = selectedComponent.getStartP().y;
-						 width = unchangedComponent.getWidth()+unchangedComponent.getStartP().x-e.getX();
-						 height = e.getY()-selectedComponent.getStartP().y;
+						 width = unchangedComp.getWidth()+unchangedComp.getX()-e.getX();
+						 height = e.getY()-selectedComp.getY();
+						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX():e.getX();
+						 tempP.y = selectedComp.getY();
 						 break;
 					 case L:
-						 tempP.x = e.getX();
-						 tempP.y = selectedComponent.getStartP().y;
-						 width = unchangedComponent.getWidth()+unchangedComponent.getStartP().x-e.getX();
-						 height = selectedComponent.getHeight();
+						 width = unchangedComp.getWidth()+unchangedComp.getX()-e.getX();
+						 height = selectedComp.getHeight();
+						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX():e.getX();
+						 tempP.y = selectedComp.getY();
 						 break;
 					default:
 						break;
-				 }
-				 
-				 width = Math.max(width, Component.MIN_WIDTH);
-				 height = Math.max(height, Component.MIN_HEIGHT);
-				 
-				 selectedComponent.setSize(tempP, width, height);
-			 }
-			 
-			 notifyObserver();
-			 _repaint();
-		 }
+				}
+				
+				selectedComp.setSizeNLocation(tempP, width, height);
+			}
+		}
 	}
-	
+
 	public void setObserver(_Observer observer){
 		this.observer = observer;
 	}
 	@Override
 	public void notifyObserver() {
-		observer.notifyObservables(selectedComponent);
+		if(selectedComp != null){
+			dummyComp.setSizeNLocation(selectedComp.getLocation(), selectedComp.getWidth(), selectedComp.getHeight());
+			dummyComp.setText(selectedComp.getText());
+			dummyComp.setType(selectedComp.getType());
+			dummyComp.setVariableName(selectedComp.getVariableName());
+			
+			this.observer.notifyObservables(dummyComp);
+		}
+		else{
+			this.observer.notifyObservables(null);
+		}
 	}
 	@Override
-	public void updateObservable(Component component) {
-		if(selectedComponent != null){
-			selectedComponent.setSize(component.getStartP(), component.getWidth(), component.getHeight());
-			selectedComponent.setName(component.getName());
+	public void updateObservable(MockComponent component) {
+		if(selectedComp != null){
+			selectedComp.setSizeNLocation(component.getLocation(), component.getWidth(), component.getHeight());
+			selectedComp.setText(component.getText());
+			selectedComp.setType(component.getType());
+			selectedComp.setVariableName(component.getVariableName());
 		}
-		
-		_repaint();
-		Utility.genCode(this);
 	}
-	
 }

@@ -1,19 +1,17 @@
 package component;
 
 public enum ComponentType {
-	NONE, RECTANGLE;
+	NONE, JLABEL;
 	
-	/**
-	 * str로 부터 적절한 ComponentType을 반환한다
-	 * @param str
-	 * @return
-	 */
-	public static ComponentType fromString(String str){
-		ComponentType type = NONE;
+	public static ComponentType fromString(String type){
+		ComponentType _type;
+		if(type == "JLABEL"){
+			_type = JLABEL;
+		}
+		else{
+			_type = NONE;
+		}
 		
-		if(str.equals("RECTANGLE"))
-			type = RECTANGLE;
-		
-		return type;
-	} 
+		return _type;
+	}
 }
