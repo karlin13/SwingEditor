@@ -80,7 +80,7 @@ public class MockComponent extends JLabel{
 	    final String SEMICOLON = ";";
 	    final String NEWLINE = "\n";
 		
-		final String CLASS = type.toString();
+		final String CLASS = ComponentType.toCode(type);
 		
 		String code = NEWLINE+"\t\t"+
 					  CLASS+SPACE+variableName+EQUAL+"new"+SPACE+CLASS

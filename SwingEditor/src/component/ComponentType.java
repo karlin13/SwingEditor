@@ -14,4 +14,12 @@ public enum ComponentType {
 		
 		return _type;
 	}
+	public static String toCode(ComponentType type){
+		String code = null;
+		
+		if(type == JLABEL)
+			code = "JLabel";
+		
+		return code;
+	}
 }
