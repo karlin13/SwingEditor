@@ -156,8 +156,12 @@ public class EditorPanel extends JPanel  implements _Observable{
 				//TODO: create class that manages variable names
 				newComp.setSizeNLocation(firstP, lastP, MIN_X, MIN_Y, MAX_X, MAX_Y);
 				
-				if(Math.abs(firstP.x-lastP.x)<MockComponent.MIN_WIDTH-1 || Math.abs(firstP.y-lastP.y)<MockComponent.MIN_HEIGHT-1)
+				if(Math.abs(firstP.x-lastP.x)<MockComponent.MIN_WIDTH-1 || Math.abs(firstP.y-lastP.y)<MockComponent.MIN_HEIGHT-1){
 					_remove(newComp);
+					//mousePressed에서 무조건 컴포넌트 하나를 add했다가 최소 너비 또는 높이를 만족하지 못하면 remove하므로
+					//remove할 때 NameManager의 countComp필드를 1감소 시켜야한다
+					NameManager.setCountComp(NameManager.getCountComp()-1);
+				}
 			}
 			else{
 				dir = Direction.NONE;
