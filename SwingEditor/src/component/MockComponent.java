@@ -30,8 +30,8 @@ public class MockComponent extends JLabel{
 	private int dx;
 	private int dy;
 	
-	public static final int MIN_WIDTH = 12;
-	public static final int MIN_HEIGHT = 12;
+	public static final int MIN_WIDTH = 18;
+	public static final int MIN_HEIGHT = 18;
 	
 	public MockComponent(String text){
 		setText(text);
@@ -123,11 +123,16 @@ public class MockComponent extends JLabel{
 		dx = startX-curX;
 		dy = startY-curY;
 	}
-	public void setSizeNLocation(Point start, int width, int height) {
+	public void setSizeNLocation(Point start, int width, int height, int MIN_X, int MIN_Y, int MAX_X, int MAX_Y) {
 		int x = start.x;
 		int y = start.y;
 		int _width = Math.max(width, MIN_WIDTH);
 		int _height = Math.max(height, MIN_HEIGHT);
+		
+		x = (x<MIN_X)?MIN_X:x;
+		x = (x+_width>MAX_X)?MAX_X-_width:x;
+		y = (y<MIN_Y)?MIN_Y:y;
+		y = (y+_height>MAX_Y)?MAX_Y-_height:y;
 		
 		setLocation(x, y);
 		setSize(_width, _height);
@@ -135,11 +140,16 @@ public class MockComponent extends JLabel{
 		
 		repaint();
 	}
-	public void setSizeNLocation(Point first, Point last) {
+	public void setSizeNLocation(Point first, Point last, int MIN_X, int MIN_Y, int MAX_X, int MAX_Y) {
 		int x = (first.x>=last.x)?last.x:first.x;
 		int y = (first.y>=last.y)?last.y:first.y;
 		int _width = Math.max(Math.abs(first.x-last.x), MIN_WIDTH);
 		int _height = Math.max(Math.abs(first.y-last.y), MIN_HEIGHT);
+		
+		x = (x<MIN_X)?MIN_X:x;
+		x = (x+_width>MAX_X)?MAX_X:x;
+		y = (y<MIN_Y)?MIN_Y:y;
+		y = (y+_height>MAX_Y)?MAX_Y:y;
 		
 		setLocation(x, y);
 		setSize(_width, _height);

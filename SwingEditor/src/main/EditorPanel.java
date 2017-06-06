@@ -40,8 +40,9 @@ public class EditorPanel extends JPanel  implements _Observable{
 	
 	private _Observer observer;
 	
+	private int MIN_X, MIN_Y, MAX_X, MAX_Y;
 	//operations
-	public EditorPanel() {	
+	public EditorPanel() {
 		initContextMenu();
 		
 		firstP = new Point();
@@ -56,6 +57,12 @@ public class EditorPanel extends JPanel  implements _Observable{
 
 		//배경색 흰색으로 설정
 		setBackground(Color.WHITE);
+		
+		//set min (x,y), max(x,y)
+		MIN_X = 0;
+		MIN_Y = 0;
+		MAX_X = this.getPreferredSize().width;
+		MAX_Y = this.getPreferredSize().height;
 	}
 	
 	public void update(){
@@ -97,10 +104,19 @@ public class EditorPanel extends JPanel  implements _Observable{
 		
 		contextMenu.add(deleteComponentMenu);
 	}
+
+	@Override
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		repaint();
+		
+		if(compSelected == true)
+			selectedComp.drawResizeHelper(g);
+	}
 	
 	@Override
 	public Dimension getPreferredSize(){
-		return new Dimension(200,200);
+		return new Dimension(390,338);
 	}
 	class EditorMouseAdapter extends MouseAdapter{
 		public void mousePressed(MouseEvent e){
@@ -114,17 +130,25 @@ public class EditorPanel extends JPanel  implements _Observable{
 			}
 			else{
 				dir = selectedComp.getResizeHelperDirection(e.getX(), e.getY());
-				unchangedComp.setSizeNLocation(selectedComp.getLocation(), selectedComp.getWidth(), selectedComp.getHeight());
+				unchangedComp.setSizeNLocation(selectedComp.getLocation(), selectedComp.getWidth(), selectedComp.getHeight(), MIN_X, MIN_Y, MAX_X, MAX_Y);
 			}
 		}
 		public void mouseReleased(MouseEvent e){
 			if(compSelected == false){
+				int EX = e.getX();
+				int EY = e.getY();
+
+				EX = (EX<MIN_X)?MIN_X:EX;
+				EX = (EX>MAX_X)?MAX_X:EX;
+				EY = (EY<MIN_Y)?MIN_Y:EY;
+				EY = (EY>MAX_Y)?MAX_Y:EY;
+				
 				//set lastP
-				lastP.x = e.getX();
-				lastP.y = e.getY();
+				lastP.x = EX;
+				lastP.y = EY;
 				
 				//TODO: create class that manages variable names
-				newComp.setSizeNLocation(firstP, lastP);
+				newComp.setSizeNLocation(firstP, lastP, MIN_X, MIN_Y, MAX_X, MAX_Y);
 				
 				if(Math.abs(firstP.x-lastP.x)<MockComponent.MIN_WIDTH-1 || Math.abs(firstP.y-lastP.y)<MockComponent.MIN_HEIGHT-1)
 					_remove(newComp);
@@ -167,23 +191,21 @@ public class EditorPanel extends JPanel  implements _Observable{
 		}
 	}
 	
-	
-	@Override
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		repaint();
-		
-		if(compSelected == true)
-			selectedComp.drawResizeHelper(g);
-	}
-	
 	class EditorMouseMotionAdapter extends MouseMotionAdapter{
 		 public void mouseDragged(MouseEvent e){
-			if(compSelected == false){
-				tempP.x = e.getX();
-				tempP.y = e.getY();
+			int EX = e.getX();
+			int EY = e.getY();
+
+			EX = (EX<MIN_X)?MIN_X:EX;
+			EX = (EX>MAX_X)?MAX_X:EX;
+			EY = (EY<MIN_Y)?MIN_Y:EY;
+			EY = (EY>MAX_Y)?MAX_Y:EY;
 				
-				newComp.setSizeNLocation(firstP, tempP);
+			if(compSelected == false){
+				tempP.x = EX;
+				tempP.y = EY;
+				
+				newComp.setSizeNLocation(firstP, tempP, MIN_X, MIN_Y, MAX_X, MAX_Y);
 			}
 			else{
 				int width, height;
@@ -195,62 +217,62 @@ public class EditorPanel extends JPanel  implements _Observable{
 					case NONE:
 						width = selectedComp.getWidth();
 						height = selectedComp.getHeight();
-						tempP.x = e.getX() + selectedComp.getDx();
-						tempP.y = e.getY() + selectedComp.getDy();
+						tempP.x = EX + selectedComp.getDx();
+						tempP.y = EY + selectedComp.getDy();
 						break;
 					case UL:
-						 width = unchangedComp.getWidth()+unchangedComp.getX()-e.getX();
-						 height = unchangedComp.getHeight()+unchangedComp.getY()-e.getY();
-						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX():e.getX();
-						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY():e.getY();
+						 width = unchangedComp.getWidth()+unchangedComp.getX()-EX;
+						 height = unchangedComp.getHeight()+unchangedComp.getY()-EY;
+						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX():EX;
+						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY():EY;
 						 break;
 					 case U:
 						 width = selectedComp.getWidth();
-						 height = unchangedComp.getHeight()+unchangedComp.getY()-e.getY();
+						 height = unchangedComp.getHeight()+unchangedComp.getY()-EY;
 						 tempP.x = selectedComp.getX();
-						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY():e.getY();
+						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY():EY;
 						 break;
 					 case UR:
-						 width = e.getX()-unchangedComp.getX();
-						 height = unchangedComp.getHeight()+unchangedComp.getY()-e.getY();
+						 width = EX-unchangedComp.getX();
+						 height = unchangedComp.getHeight()+unchangedComp.getY()-EY;
 						 tempP.x = selectedComp.getX();
-						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY():e.getY();
+						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY():EY;
 						 break;
 					 case R:
-						 width = e.getX()-unchangedComp.getX();
+						 width = EX-unchangedComp.getX();
 						 height = selectedComp.getHeight();
 						 tempP.x = selectedComp.getX();
 						 tempP.y = selectedComp.getY();
 						 break;
 					 case DR:
-						 width = e.getX()-unchangedComp.getX();
-						 height = e.getY()-unchangedComp.getY();
+						 width = EX-unchangedComp.getX();
+						 height = EY-unchangedComp.getY();
 						 tempP.x = selectedComp.getX();
 						 tempP.y = selectedComp.getY();
 						 break;
 					 case D:
 						 width = selectedComp.getWidth();
-						 height = e.getY()-selectedComp.getY();
+						 height = EY-selectedComp.getY();
 						 tempP.x = selectedComp.getX();
 						 tempP.y = selectedComp.getY();
 						 break;
 					 case DL:
-						 width = unchangedComp.getWidth()+unchangedComp.getX()-e.getX();
-						 height = e.getY()-selectedComp.getY();
-						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX():e.getX();
+						 width = unchangedComp.getWidth()+unchangedComp.getX()-EX;
+						 height = EY-selectedComp.getY();
+						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX():EX;
 						 tempP.y = selectedComp.getY();
 						 break;
 					 case L:
-						 width = unchangedComp.getWidth()+unchangedComp.getX()-e.getX();
+						 width = unchangedComp.getWidth()+unchangedComp.getX()-EX;
 						 height = selectedComp.getHeight();
-						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX():e.getX();
+						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX():EX;
 						 tempP.y = selectedComp.getY();
 						 break;
 					default:
 						break;
 				}
 				
-				selectedComp.setSizeNLocation(tempP, width, height);
+				selectedComp.setSizeNLocation(tempP, width, height, MIN_X, MIN_Y, MAX_X, MAX_Y);
 			}
 		}
 	}
@@ -261,7 +283,7 @@ public class EditorPanel extends JPanel  implements _Observable{
 	@Override
 	public void notifyObserver() {
 		if(selectedComp != null){
-			dummyComp.setSizeNLocation(selectedComp.getLocation(), selectedComp.getWidth(), selectedComp.getHeight());
+			dummyComp.setSizeNLocation(selectedComp.getLocation(), selectedComp.getWidth(), selectedComp.getHeight(), MIN_X, MIN_Y, MAX_X, MAX_Y);
 			dummyComp.setText(selectedComp.getText());
 			dummyComp.setType(selectedComp.getType());
 			dummyComp.setVariableName(selectedComp.getVariableName());
@@ -275,7 +297,7 @@ public class EditorPanel extends JPanel  implements _Observable{
 	@Override
 	public void updateObservable(MockComponent component) {
 		if(selectedComp != null){
-			selectedComp.setSizeNLocation(component.getLocation(), component.getWidth(), component.getHeight());
+			selectedComp.setSizeNLocation(component.getLocation(), component.getWidth(), component.getHeight(), MIN_X, MIN_Y, MAX_X, MAX_Y);
 			selectedComp.setText(component.getText());
 			selectedComp.setType(component.getType());
 			selectedComp.setVariableName(component.getVariableName());

@@ -139,7 +139,9 @@ public class AttributePanel extends JPanel implements _Observable{
 			dummyP.y = Integer.parseInt(txtFldY.getText());
 			
 			//set dummyComp
-			dummyComp.setSizeNLocation(dummyP, Integer.parseInt(txtFldWidth.getText()), Integer.parseInt(txtFldHeight.getText()));
+			// 깔끔한 구조가 생각안나서 그냥 하드코딩 했습니다
+			//TODO: 코드 개선
+			dummyComp.setSizeNLocation(dummyP, Integer.parseInt(txtFldWidth.getText()), Integer.parseInt(txtFldHeight.getText()), 0, 0, 390, 338);
 			dummyComp.setText(txtFldText.getText());
 			dummyComp.setType(ComponentType.fromString(cmbBxType.getSelectedItem().toString()));
 			dummyComp.setVariableName(txtFldVariableName.getText());

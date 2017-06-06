@@ -84,7 +84,9 @@ public class Utility {
 
 				// create component
 				MockComponent component = new MockComponent(text);
-				component.setSizeNLocation(new Point(x, y), width, height);
+				//깔끔한 구조가 생각이 안나서 그냥 하드코딩 했습니다
+				//TODO: 코드 개선
+				component.setSizeNLocation(new Point(x, y), width, height, 0, 0, 390, 338);
 				component.setText(text);
 				component.setType(type);
 				component.setVariableName(variableName);
@@ -161,7 +163,7 @@ public class Utility {
 			//components to json
 			for (Component component : components) {
 				MockComponent mock = (MockComponent)component;
-				jsonData.append(mock.toJson()+",");
+			 	jsonData.append(mock.toJson()+",");
 			}
 			// 마지막 , 지운다
 			int lastIndex = jsonData.length()-1;
