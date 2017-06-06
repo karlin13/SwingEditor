@@ -19,6 +19,7 @@ import javax.swing.JPopupMenu;
 
 import component.Direction;
 import component.MockComponent;
+import component.NameManager;
 import util._Observable;
 import util._Observer;
 
@@ -43,6 +44,8 @@ public class EditorPanel extends JPanel  implements _Observable{
 	private int MIN_X, MIN_Y, MAX_X, MAX_Y;
 	//operations
 	public EditorPanel() {
+		NameManager.initCountComp();
+		
 		initContextMenu();
 		
 		firstP = new Point();
@@ -80,6 +83,8 @@ public class EditorPanel extends JPanel  implements _Observable{
 		update();
 	}
 	public void _removeAll(){
+		NameManager.initCountComp();
+		
 		compSelected = false;
 		selectedComp = null;
 		notifyObserver();
@@ -125,7 +130,7 @@ public class EditorPanel extends JPanel  implements _Observable{
 				firstP.x = e.getX();
 				firstP.y = e.getY();
 				
-				newComp = new MockComponent("hi");
+				newComp = new MockComponent(NameManager.genName());
 				_add(newComp);
 			}
 			else{

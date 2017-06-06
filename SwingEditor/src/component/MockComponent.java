@@ -37,7 +37,7 @@ public class MockComponent extends JLabel{
 		setText(text);
 		
 		this.type = ComponentType.JLABEL;
-		this.variableName = text+this.type;
+		this.variableName = text;
 		
 		unhighlightBorder();
 		

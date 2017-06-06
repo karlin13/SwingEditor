@@ -21,6 +21,7 @@ import org.json.simple.parser.ParseException;
 
 import component.ComponentType;
 import component.MockComponent;
+import component.NameManager;
 
 public class Utility {
 	//an instance for calling Utility constructor, this variable is never used
@@ -93,7 +94,9 @@ public class Utility {
 				// add component
 				panel._add(component);
 			}
-
+			
+			NameManager.setCountComp(Integer.parseInt(jsonObj.get("countComponent").toString()));
+			
 			panel.repaint();
 		} catch (FileNotFoundException e) {
 			JOptionPane.showMessageDialog(parent, e.getMessage());
@@ -132,8 +135,8 @@ public class Utility {
 			int lastIndex = jsonData.length()-1;
 			jsonData.deleteCharAt(lastIndex);
 			//closing bracket 추가
-			jsonData.append("]}");
-	
+			jsonData.append("]"+",\"countComponent\":"+NameManager.getCountComp()+"}");
+			
 			// write json data to file
 			FileWriter fw = new FileWriter(jsonFilePath);
 			fw.write(jsonData.toString());
@@ -169,8 +172,8 @@ public class Utility {
 			int lastIndex = jsonData.length()-1;
 			jsonData.deleteCharAt(lastIndex);
 			//closing bracket 추가
-			jsonData.append("]}");
-	
+			jsonData.append("]"+",\"countComponent\":"+NameManager.getCountComp()+"}");
+			
 			// write json data to file
 			FileWriter fw = new FileWriter(jsonFilePath);
 			fw.write(jsonData.toString());

@@ -1,12 +1,15 @@
 package component;
 
 public enum ComponentType {
-	NONE, JLABEL;
+	NONE, JLABEL, JBUTTON;
 	
 	public static ComponentType fromString(String type){
 		ComponentType _type;
 		if(type == "JLABEL"){
 			_type = JLABEL;
+		}
+		else if(type == "JBUTTON"){
+			_type = JBUTTON;
 		}
 		else{
 			_type = NONE;
@@ -19,6 +22,8 @@ public enum ComponentType {
 		
 		if(type == JLABEL)
 			code = "JLabel";
+		else if(type == JBUTTON)
+			code = "JButton";
 		
 		return code;
 	}

@@ -11,6 +11,10 @@ import util._Observable;
 import util._Observer;
 
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -108,6 +112,13 @@ public class AttributePanel extends JPanel implements _Observable{
 		txtFldHeight.addKeyListener(keyAdapter);
 		txtFldText.addKeyListener(keyAdapter);
 		txtFldVariableName.addKeyListener(keyAdapter);
+		
+		cmbBxType.addItemListener(new ItemListener(){
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED && e.getItem() != ComponentType.NONE)
+					notifyObserver();
+			}});
 	}
 	
 	private void setAttribute(MockComponent component){
