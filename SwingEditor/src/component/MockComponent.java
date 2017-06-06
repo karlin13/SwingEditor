@@ -218,7 +218,6 @@ public class MockComponent extends JLabel{
 			redispatchToParent(e);
 		}
 		public void mouseClicked(MouseEvent e){
-			highlightBorder();
 			redispatchToParent(e);
 		}
 	}
