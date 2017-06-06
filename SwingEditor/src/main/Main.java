@@ -9,6 +9,7 @@ public class Main{
 				try {
 					Window frame = new Window();
 					
+					frame.setResizable(false);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
