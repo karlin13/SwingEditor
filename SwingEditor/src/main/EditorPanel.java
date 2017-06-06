@@ -223,20 +223,20 @@ public class EditorPanel extends JPanel  implements _Observable{
 					case UL:
 						 width = unchangedComp.getWidth()+unchangedComp.getX()-EX;
 						 height = unchangedComp.getHeight()+unchangedComp.getY()-EY;
-						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX():EX;
-						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY():EY;
+						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX()+selectedComp.getWidth()-MockComponent.MIN_WIDTH:EX;
+						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY()+selectedComp.getHeight()-MockComponent.MIN_HEIGHT:EY;
 						 break;
 					 case U:
 						 width = selectedComp.getWidth();
 						 height = unchangedComp.getHeight()+unchangedComp.getY()-EY;
 						 tempP.x = selectedComp.getX();
-						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY():EY;
+						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY()+selectedComp.getHeight()-MockComponent.MIN_HEIGHT:EY;
 						 break;
 					 case UR:
 						 width = EX-unchangedComp.getX();
 						 height = unchangedComp.getHeight()+unchangedComp.getY()-EY;
 						 tempP.x = selectedComp.getX();
-						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY():EY;
+						 tempP.y = (height<MockComponent.MIN_HEIGHT)?selectedComp.getY()+selectedComp.getHeight()-MockComponent.MIN_HEIGHT:EY;
 						 break;
 					 case R:
 						 width = EX-unchangedComp.getX();
@@ -259,13 +259,13 @@ public class EditorPanel extends JPanel  implements _Observable{
 					 case DL:
 						 width = unchangedComp.getWidth()+unchangedComp.getX()-EX;
 						 height = EY-selectedComp.getY();
-						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX():EX;
+						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX()+selectedComp.getWidth()-MockComponent.MIN_WIDTH:EX;
 						 tempP.y = selectedComp.getY();
 						 break;
 					 case L:
 						 width = unchangedComp.getWidth()+unchangedComp.getX()-EX;
 						 height = selectedComp.getHeight();
-						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX():EX;
+						 tempP.x = (width<MockComponent.MIN_WIDTH)?selectedComp.getX()+selectedComp.getWidth()-MockComponent.MIN_WIDTH:EX;
 						 tempP.y = selectedComp.getY();
 						 break;
 					default:
