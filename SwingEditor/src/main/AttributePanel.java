@@ -118,8 +118,8 @@ public class AttributePanel extends JPanel implements _Observable{
 		txtFldWidth.setText(component.getWidth()+"");
 		txtFldHeight.setText(component.getHeight()+"");
 		txtFldText.setText(component.getText());
-		cmbBxType.setSelectedItem(component.getType());
 		txtFldVariableName.setText(component.getVariableName());
+		cmbBxType.setSelectedItem(component.getType());
 	}
 	private void emptyAttribute(){
 		txtFldX.setText("");
@@ -127,8 +127,8 @@ public class AttributePanel extends JPanel implements _Observable{
 		txtFldWidth.setText("");
 		txtFldHeight.setText("");
 		txtFldText.setText("");
-		cmbBxType.setSelectedItem(ComponentType.NONE);
 		txtFldVariableName.setText("");
+		cmbBxType.setSelectedItem(ComponentType.NONE);
 	}
 	
 	public void setObserver(_Observer observer){
