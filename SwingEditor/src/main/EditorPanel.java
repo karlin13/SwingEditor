@@ -130,6 +130,7 @@ public class EditorPanel extends JPanel  implements _Observable{
 			}
 			else{
 				dir = selectedComp.getResizeHelperDirection(e.getX(), e.getY());
+				selectedComp.setDiff(selectedComp.getX(), selectedComp.getY(), e.getX(), e.getY());		
 				unchangedComp.setSizeNLocation(selectedComp.getLocation(), selectedComp.getWidth(), selectedComp.getHeight(), MIN_X, MIN_Y, MAX_X, MAX_Y);
 			}
 		}
@@ -176,7 +177,6 @@ public class EditorPanel extends JPanel  implements _Observable{
 				}
 				else if(e.getSource() instanceof MockComponent){
 					MockComponent mock = (MockComponent)e.getSource();
-					mock.setDiff(mock.getX(), mock.getY(), e.getX(), e.getY());
 					mock.select();
 					
 					selectedComp = mock;
