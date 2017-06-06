@@ -7,15 +7,11 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import component.MockComponent;
 import util._Observable;
 import util._Observer;
-
-import javax.swing.BoxLayout;
-
 
 public class Window extends JFrame implements _Observer{
 
@@ -30,7 +26,7 @@ public class Window extends JFrame implements _Observer{
 	public Window() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		setBounds(300, 300, 600, 400);
+		setBounds(300, 150, 600, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));

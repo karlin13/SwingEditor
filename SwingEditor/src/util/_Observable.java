@@ -1,6 +1,5 @@
 package util;
 
-import component.ComponentType;
 import component.MockComponent;
 
 public interface _Observable {

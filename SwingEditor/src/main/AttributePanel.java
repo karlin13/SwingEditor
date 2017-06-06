@@ -3,7 +3,6 @@ package main;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 
 import component.ComponentType;
 import component.MockComponent;
@@ -11,8 +10,6 @@ import util._Observable;
 import util._Observer;
 
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
@@ -20,12 +17,6 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JComboBox;
 import java.awt.GridLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.FlowLayout;
-import javax.swing.BoxLayout;
-import java.awt.CardLayout;
 
 
 public class AttributePanel extends JPanel implements _Observable{

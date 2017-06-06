@@ -6,8 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -16,7 +14,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 
 public class MockComponent extends JLabel{
 	private ComponentType type;
@@ -24,8 +21,6 @@ public class MockComponent extends JLabel{
 	
 	private Rectangle[] resizeHelper;
 	private final int resizeHelperLen = 12;
-	
-	private boolean isSelected;
 	
 	private int dx;
 	private int dy;
@@ -61,11 +56,9 @@ public class MockComponent extends JLabel{
 	}
 	
 	public void select(){
-		isSelected = true;
 		highlightBorder();
 	}
 	public void unselect(){
-		isSelected = false;
 		unhighlightBorder();
 	}
 	

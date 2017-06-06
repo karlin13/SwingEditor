@@ -3,10 +3,8 @@ package main;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
-import javax.swing.UIManager;
 
 public class ToolBar extends JToolBar{
 	private JButton btnNew;

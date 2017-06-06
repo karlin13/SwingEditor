@@ -8,8 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -210,8 +208,6 @@ public class Utility {
 			
 			//write code to file
 			FileWriter fw;
-			
-			String rootPath = System.getProperty("user.dir");
 			
 			fw = new FileWriter(javaFilePath);
 			fw.write(code.toString());
