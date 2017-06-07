@@ -5,10 +5,10 @@ public enum ComponentType {
 	
 	public static ComponentType fromString(String type){
 		ComponentType _type;
-		if(type == "JLABEL"){
+		if(type.equals("JLABEL")){
 			_type = JLABEL;
 		}
-		else if(type == "JBUTTON"){
+		else if(type.equals("JBUTTON")){
 			_type = JBUTTON;
 		}
 		else{
