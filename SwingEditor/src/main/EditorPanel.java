@@ -170,11 +170,10 @@ public class EditorPanel extends JPanel  implements _Observable{
 		}
 		public void mouseClicked(MouseEvent e){
 			if(e.getButton() == MouseEvent.BUTTON1){
-				//unhighlight all components
-				Component[] components = _getComponents();
-				for(Component component:components){
-					MockComponent mock = (MockComponent)component;
-					mock.unselect();
+				
+				if(selectedComp != null){
+					selectedComp.unselect();
+					selectedComp = null;
 				}
 				
 				//select component
