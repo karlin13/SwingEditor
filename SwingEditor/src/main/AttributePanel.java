@@ -93,7 +93,8 @@ public class AttributePanel extends JPanel implements _Observable{
 		//add key listener
 		KeyAdapter keyAdapter = new KeyAdapter(){
 			public void keyPressed(KeyEvent e){
-				notifyObserver();
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+					notifyObserver();
 			}
 		};
 		
