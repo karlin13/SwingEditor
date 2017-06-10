@@ -36,7 +36,6 @@ public class Utility {
 
 	public static void _new(EditorPanel panel) {
 		panel._removeAll();
-		panel.repaint();
 	}
 
 	public static void open(Window parent, EditorPanel panel){
