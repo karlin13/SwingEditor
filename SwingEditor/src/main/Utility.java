@@ -45,7 +45,7 @@ public class Utility {
 			if (result == JFileChooser.APPROVE_OPTION) {
 				jsonFilePath = fileChooser.getSelectedFile().getAbsolutePath();
 				
-				if(!jsonFilePath.matches("[a-zA-Z1-9가-힣/]+\\.json$"))
+				if(!jsonFilePath.matches("[\\S]+\\.json$"))
 					throw new IOException("only .json file allowed!");
 				
 				// clear editor panel
@@ -115,7 +115,7 @@ public class Utility {
 				if (result == JFileChooser.APPROVE_OPTION) {
 					jsonFilePath = fileChooser.getSelectedFile().getAbsolutePath();
 					
-					if(!jsonFilePath.matches("[a-zA-Z1-9가-힣/]+\\.json$"))
+					if(!jsonFilePath.matches("[\\S]+\\.json$"))
 						throw new IOException("only .json file allowed!");
 					
 					// make json data
@@ -154,7 +154,7 @@ public class Utility {
 			if (result == JFileChooser.APPROVE_OPTION) {
 				jsonFilePath = fileChooser.getSelectedFile().getAbsolutePath();
 				
-				if(!jsonFilePath.matches("[a-zA-Z1-9가-힣/]+\\.json$"))
+				if(!jsonFilePath.matches("[\\S]+\\.json$"))
 					throw new IOException("only .json file allowed!");
 				
 				// make json data
@@ -191,7 +191,7 @@ public class Utility {
 			if (result == JFileChooser.APPROVE_OPTION) {
 				javaFilePath = fileChooser.getSelectedFile().getAbsolutePath();
 				
-				if(!javaFilePath.matches("[a-zA-Z1-9가-힣/]+\\.java$"))
+				if(!javaFilePath.matches("[\\S]+\\.java$"))
 					throw new IOException("only .java file allowed!");
 				
 				String firstHalf = "import java.awt.BorderLayout;\nimport java.awt.EventQueue;\n\nimport javax.swing.JFrame;\nimport javax.swing.JPanel;\nimport javax.swing.JButton;\nimport javax.swing.JLabel;\n	import javax.swing.border.EmptyBorder;\n\npublic class test extends JFrame {\n\n\tprivate JPanel contentPane;\n\n\t/**\n\t * Launch the application.\n\t */\n\tpublic static void main(String[] args) {\n\t\tEventQueue.invokeLater(new Runnable() {\n\t\t\tpublic void run() {\n\t\t\t\ttry {\n\t\t\t\t\ttest frame = new test();\n\t\t\t\t\tframe.setVisible(true);\n\t\t\t\t} catch (Exception e) {\n\t\t\t\t\te.printStackTrace();\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\t}\n\n\t/**\n\t * Create the frame.\n\t */\n\tpublic test() {\n\t\tsetDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\n\t\tsetBounds(100, 100, 450, 300);\n\t\tcontentPane = new JPanel();\n\t\tcontentPane.setBorder(new EmptyBorder(5, 5, 5, 5));\n\t\tcontentPane.setLayout(null);\n\t\tsetContentPane(contentPane);\n";
